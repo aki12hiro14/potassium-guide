@@ -936,7 +936,14 @@ document.addEventListener('click',e=>{const b=e.target.closest('.chip,.fruitchip
  else if(type==='cocoafreq'){b.classList.toggle('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
  else if(type==='seasoningdetail'){b.classList.toggle('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
  else if(type==='juicefreq'){if(id==='juice_lots'){b.classList.toggle('sel')}else{$$('[data-type="juicefreq"]:not([data-id="juice_lots"])').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
- else if(type==='foodnone'){$$('#foodgroups .chip,[data-type="food"],[data-type="fruitdetail"],[data-type="drinkdetail"],[data-type="juicedetail"],[data-type="juicefreq"],[data-type="aojirukind"],[data-type="aojirumix"],[data-type="aojirufreq"],[data-type="chocoamt"],[data-type="chocofreq"],[data-type="cocoatype"],[data-type="cocoafreq"],[data-type="seasoningdetail"],[data-type="foodpattern"],[data-type="fruitgap"],[data-type="nutsamount"],[data-type="nutspattern"]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}
+ else if(type==='foodnone'){
+  const clearSel='#foodgroups .chip,[data-type="food"],[data-type="fruitdetail"],[data-type="drinkdetail"],[data-type="juicedetail"],[data-type="juicefreq"],[data-type="aojirukind"],[data-type="aojirumix"],[data-type="aojirufreq"],[data-type="chocoamt"],[data-type="chocofreq"],[data-type="cocoatype"],[data-type="cocoafreq"],[data-type="seasoningdetail"],[data-type="foodpattern"],[data-type="fruitgap"],[data-type="nutsamount"],[data-type="nutspattern"]';
+  // すでに選んだ項目がある状態で「特に増えていない」を押すと全部消えてしまうため、誤タップ防止の確認を入れる
+  const selCount=$$(clearSel).filter(x=>x.classList.contains('sel')).length;
+  if(selCount>0 && !confirm('これまでに選んだ'+selCount+'個の項目を、すべて消して「特に増えていない」にしますか？\n\n「次へ」に進みたいだけなら「キャンセル」を押してください。')){return;}
+  $$(clearSel).forEach(x=>x.classList.remove('sel'));
+  b.classList.add('sel');
+ }
  else if(type==='foodpattern'){$$('[data-type="foodpattern"]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}
  else if(type==='fruitgap'){$$('[data-type="fruitgap"]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}
  else if(type==='nutsamount'){$$('[data-type="nutsamount"]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}

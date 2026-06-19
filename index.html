@@ -912,11 +912,10 @@ function closeDetail(target){
  const panel=document.getElementById(target);
  if(panel)panel.classList.remove('open');
  syncDetailState();
- // 果物の詳細は縦に長いため、閉じた後に元の「果物」ボタンへ戻す
- if(target==='fruitInline'){
-  const trigger=document.getElementById('fruitTrigger');
-  if(trigger)requestAnimationFrame(()=>trigger.scrollIntoView({behavior:'smooth',block:'center'}));
- }
+ // どの詳細画面も、閉じた後は開いた元のボタン位置へ戻す
+ const triggerId=target.replace(/Inline$/,'Trigger');
+ const trigger=document.getElementById(triggerId);
+ if(trigger)requestAnimationFrame(()=>trigger.scrollIntoView({behavior:'smooth',block:'center'}));
 }
 document.addEventListener('click',e=>{
  const c=e.target.closest('[data-close-detail]');

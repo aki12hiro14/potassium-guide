@@ -35,7 +35,9 @@ h2{font-size:23px;margin:0 0 8px}h3{font-size:19px;margin:18px 0 8px}
 .menu{display:grid;gap:13px;margin-top:16px}
 .menu button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:18px;box-shadow:var(--shadow);display:flex;gap:14px;align-items:center;text-align:left;font:inherit;color:inherit}
 .mi{width:54px;height:54px;border-radius:16px;background:#e8f6f3;display:grid;place-items:center;font-size:30px;flex:0 0 54px}
-.mt b{display:block;font-size:19px}.mt span{font-size:13px;color:var(--sub)}
+.mt{flex:1;min-width:0}.mt b{display:block;font-size:19px}.mt span{font-size:13px;color:var(--sub)}
+.menuArrow{margin-left:auto;flex:0 0 auto;align-self:center;font-size:13px;font-weight:900;color:var(--main2);background:#e8f6f3;border-radius:999px;padding:5px 9px;white-space:nowrap}
+.homeCookText{flex:1;min-width:0}
 /* mode toggle */
 .modecard{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--shadow);margin:16px 0}
 .modecard .q{font-weight:900;font-size:16px;margin-bottom:10px;text-align:center}
@@ -94,7 +96,8 @@ h2{font-size:23px;margin:0 0 8px}h3{font-size:19px;margin:18px 0 8px}
 @media(max-width:520px){.drinkguide{grid-template-columns:1fr}}
 @media(max-width:380px){.drinkgrid{grid-template-columns:1fr}}
 @media(max-width:380px){.fruitgrid{grid-template-columns:1fr}}
-.chip{border:2px solid var(--line);background:#fff;border-radius:18px;padding:15px 10px;text-align:center;font:inherit;color:inherit;min-height:92px}
+.chip{border:2px solid var(--line);background:#fff;border-radius:18px;padding:15px 10px;text-align:center;font:inherit;color:inherit;min-height:92px;box-shadow:0 3px 10px rgba(10,80,70,.08);cursor:pointer;transition:transform .07s ease,box-shadow .07s ease}
+.chip:active{transform:scale(.96);box-shadow:0 1px 4px rgba(10,80,70,.12)}
 .chip .e{font-size:31px;display:block}.chip b{font-size:15px;line-height:1.3}.chip small{display:block;color:var(--sub);font-size:11px;margin-top:2px}
 .chip.sel{border-color:var(--main);background:#e8f6f3;box-shadow:inset 0 0 0 2px rgba(9,135,118,.12)}
 .wide{grid-column:1/-1}
@@ -206,11 +209,18 @@ h2{font-size:23px;margin:0 0 8px}h3{font-size:19px;margin:18px 0 8px}
 .sectionCue{margin:18px 0 10px;padding:13px 15px;border-radius:16px;font-weight:1000;font-size:18px;border-left:7px solid var(--main);background:#edf9f6}
 .sectionCue.how{border-left-color:#d78916;background:#fff8e9;color:#754900;margin-top:24px}
 .sectionCue small{display:block;font-size:12px;font-weight:600;color:var(--sub);margin-top:2px}
-.detailTrigger{border:2px dashed #a9d7ce!important;background:#f2fbf8!important}
-.detailTrigger .hint{display:inline-block;margin-top:6px;padding:2px 8px;border-radius:999px;background:#dff3ee;color:var(--main2);font-size:11px;font-weight:900}
+.detailTrigger{border:2px dashed #6dbfab!important;background:#f2fbf8!important;position:relative;padding-top:30px!important}
+.detailTrigger:before{content:"タップ";position:absolute;top:10px;right:12px;font-size:10px;font-weight:1000;color:#fff;background:var(--main);border-radius:999px;padding:3px 9px;letter-spacing:.04em;box-shadow:0 2px 6px rgba(9,135,118,.3)}
+.detailTrigger .hint{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:10px;padding:10px 12px;border-radius:14px;background:var(--main);color:#fff;font-size:14px;font-weight:900;box-shadow:0 4px 10px rgba(9,135,118,.28)}
+.detailTrigger .hint:before{content:"👆"}
+.detailTrigger .hint:after{content:"›";font-size:19px;font-weight:1000;line-height:.8}
 .detailTrigger.active{border-style:solid!important;border-color:var(--main)!important;background:#e8f6f3!important}
-.detailTrigger .selectedMini{display:none;margin-top:6px;padding:3px 8px;border-radius:999px;background:var(--main);color:#fff;font-size:11px;font-weight:900}
-.detailTrigger.active .selectedMini{display:inline-block}.detailTrigger.active .hint{display:none}
+.detailTrigger.active:before{content:"選択中";background:#066b60}
+.detailTrigger .selectedMini{display:none;margin-top:10px;padding:8px 12px;border-radius:14px;background:var(--main);color:#fff;font-size:14px;font-weight:900;box-shadow:0 4px 10px rgba(9,135,118,.28)}
+.detailTrigger.active .selectedMini{display:flex;align-items:center;justify-content:center;gap:5px}
+.detailTrigger.active .selectedMini:before{content:"👆"}
+.detailTrigger.active .selectedMini:after{content:"›";font-size:19px;font-weight:1000;line-height:.8}
+.detailTrigger.active .hint{display:none}
 .inlineDetail{display:none;grid-column:1/-1;border:2px solid #b9ddd6;border-radius:18px;background:#f9fffd;padding:14px;margin-top:2px;text-align:left;animation:fadeIn .18s ease}
 .inlineDetail.open{display:block}.inlineDetail.fruitInline{border-color:#efb8d3;background:#fff7fb}.inlineDetail.drinkInline{border-color:#a9d3df;background:#f4fbfd}
 .inlineHead{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;margin-bottom:8px}.inlineHead h3{margin:0;font-size:18px}.inlineHead p{margin:2px 0 0;font-size:12px;color:var(--sub)}
@@ -310,16 +320,82 @@ h2{font-size:23px;margin:0 0 8px}h3{font-size:19px;margin:18px 0 8px}
 
 <div class="homeSubhead">参考・学びたいときに</div>
 <div class="menu secondaryMenu">
-<button class="homeSub" data-go="timing"><div class="mi">📅</div><div class="mt"><b>血液透析中の方へ、フルーツ食べるならいつ？</b><span>食べる日とタイミングを確認</span></div></button>
+<button class="homeSub" data-go="timing"><div class="mi">📅</div><div class="mt"><b>血液透析中の方へ、フルーツ食べるならいつ？</b><span>食べる日とタイミングを確認</span></div><span class="menuArrow">＋ 詳しく見る</span></button>
 </div>
 
 <button id="homeCookBtn" class="homeCookBtn homeSub" type="button">
   <div class="mi2">💧</div>
-  <div>
+  <div class="homeCookText">
     <b>知らなきゃ損！カリウムを安全に減らす「ゆでこぼしと水さらし」の極意</b>
     <span>水にさらすだけでは不十分なことがあります</span>
   </div>
+  <span class="menuArrow">＋ 詳しく見る</span>
 </button>
+
+<details class="morebox" id="budgetDrawer" style="margin:14px 0 0">
+  <summary><span style="display:flex;align-items:center;gap:12px"><span style="font-size:27px;line-height:1;flex:0 0 auto">📊</span><span><b style="font-size:18px;display:block;line-height:1.3">1日、カリウムはどれくらいまで？</b><span style="font-size:13px;color:var(--sub);display:block;margin-top:2px;font-weight:600">ふだんの食事にプラスできる量の目安</span></span></span></summary>
+  <div class="morecontent">
+    <div class="kBudgetCard" aria-label="1日のカリウムは土台と上乗せで考える" style="margin-top:2px;box-shadow:none">
+      <div class="kBudgetHead">
+        <div class="icon">📊</div>
+        <div>
+          <b>週3回血液透析中の方は、1日<span class="k2000">2,000mg以下</span>がひとつの目安</b>
+          <span>「原因さがし」では、この上乗せ分に何があったかを探します。</span>
+        </div>
+      </div>
+
+      <div class="kBudgetFlow">
+        <div class="kBudgetPart base">
+          <span>🍚 いつもの朝・昼・夕食</span>
+          <strong>約1,400〜1,600mg</strong>
+          <small>ごはん・主菜・副菜・汁物を合わせた概算</small>
+        </div>
+        <div class="kBudgetPlus">＋</div>
+        <div class="kBudgetPart extra">
+          <span>🍎 目安までの差</span>
+          <strong>約400〜600mg</strong>
+          <small>ここに果物・飲み物・おやつなどが上乗せされます</small>
+        </div>
+      </div>
+
+      <div class="kBudgetMsg">いつもの食事を減らす前に、果物・飲み物・おやつなど、何が上乗せされたかを探しましょう。</div>
+
+      <details class="kBudgetDetails">
+        <summary>1食の内訳と、上乗せの具体例を見る</summary>
+        <div class="kBudgetBody">
+          <div class="kMealTitle">🍽 1食の普通の食事（概算）</div>
+          <div class="kMealRows">
+            <div class="kMealRow"><span>🍚 白ごはん1膳・150g</span><b>約40〜50mg</b></div>
+            <div class="kMealRow"><span>🐟 肉・魚・卵などの主菜</span><b>約200〜300mg</b></div>
+            <div class="kMealRow"><span>🥬 ゆでた野菜の副菜</span><b>約100〜150mg</b></div>
+            <div class="kMealRow"><span>🥣 味噌汁1杯</span><b>約100〜180mg</b></div>
+            <div class="kMealRow total"><span>1食合計</span><b>約450〜600mg</b></div>
+          </div>
+          <div class="kMealNote">白ごはんはKが少なめです。主なKは、肉・魚、野菜、汁物の具から入ります。量や献立で大きく変わるため、厳密な計算ではなく全体像をつかむための目安です。</div>
+
+          <div class="kMisoBox">
+            <b>🥣 味噌汁は「味噌」より具で変わる</b>
+            <div>・わかめ・ねぎなど少量：<strong>約80〜150mg</strong><br>・豆腐・野菜入り：<strong>約150〜250mg</strong><br>・いも・かぼちゃ・豆・具だくさん：<strong>250〜400mg以上</strong>になることも</div>
+            <div class="kMisoTip">水分・塩分にも注意し、具を食べて汁は残すのが基本です。</div>
+          </div>
+
+          <div class="kExtraTitle">🍎 普通の食事に上乗せされやすいもの</div>
+          <div class="kExtraGrid">
+            <div class="kExtraItem"><b>🍌 バナナ1本</b>約300〜360mg</div>
+            <div class="kExtraItem"><b>🧃 濃い野菜ジュース1本</b>約500〜650mgの製品も</div>
+            <div class="kExtraItem"><b>🥜 ナッツひとつかみ</b>約150mg</div>
+            <div class="kExtraItem"><b>🍊 みかん2個</b>約200〜260mg</div>
+            <div class="kExtraItem wide"><b>🍹 果汁100％ジュース500mL</b>約550〜950mg</div>
+          </div>
+
+          <div class="kBudgetCaution"><b>注意：</b>約400〜600mgは「必ず食べてよい残り枠」ではありません。血清K、残尿、便通、透析量などで変わります。主治医・管理栄養士の指示を優先してください。</div>
+          <div class="kBudgetSource">※1日2,000mg以下：日本透析医学会「慢性透析患者の食事療法基準」。食品量は日本食品標準成分表などをもとにした概算です。</div>
+        </div>
+      </details>
+    </div>
+  </div>
+</details>
+
 <p class="note">このツールは教育の補助です。カリウム・水分・たんぱくの制限は人によって違います。治療の判断は必ず主治医・医療スタッフに相談してください。</p>
 </section>
 
@@ -369,77 +445,19 @@ h2{font-size:23px;margin:0 0 8px}h3{font-size:19px;margin:18px 0 8px}
 <section id="detect" class="screen">
 <div class="steps"><i class="dot on"></i><i class="dot"></i><i class="dot"></i></div>
 <div class="card step" data-step="0">
-<h2>② 食事の原因を深掘り</h2>
-<p class="lead">当てはまる項目を開いて、種類・量・回数を確認します。</p>
-<div class="kBudgetCard" aria-label="1日のカリウムは土台と上乗せで考える">
-  <div class="kBudgetHead">
-    <div class="icon">📊</div>
-    <div>
-      <b>1日のカリウムは「土台＋上乗せ」で考える</b>
-      <span>週3回血液透析中の方は、1日<span class="k2000" style="color:#d43d3d;font-weight:1000;">2,000mg以下</span>がひとつの目安です。</span>
-    </div>
-  </div>
-
-  <div class="kBudgetFlow">
-    <div class="kBudgetPart base">
-      <span>🍚 いつもの朝・昼・夕食</span>
-      <strong>約1,400〜1,600mg</strong>
-      <small>ごはん・主菜・副菜・汁物を合わせた概算</small>
-    </div>
-    <div class="kBudgetPlus">＋</div>
-    <div class="kBudgetPart extra">
-      <span>🍎 目安までの差</span>
-      <strong>約400〜600mg</strong>
-      <small>ここに果物・飲み物・おやつなどが上乗せされます</small>
-    </div>
-  </div>
-
-  <div class="kBudgetMsg">いつもの食事を減らす前に、果物・飲み物・おやつなど、何が上乗せされたかを探しましょう。</div>
-
-  <details class="kBudgetDetails">
-    <summary>1食の内訳と、上乗せの具体例を見る</summary>
-    <div class="kBudgetBody">
-      <div class="kMealTitle">🍽 1食の普通の食事（概算）</div>
-      <div class="kMealRows">
-        <div class="kMealRow"><span>🍚 白ごはん1膳・150g</span><b>約40〜50mg</b></div>
-        <div class="kMealRow"><span>🐟 肉・魚・卵などの主菜</span><b>約200〜300mg</b></div>
-        <div class="kMealRow"><span>🥬 ゆでた野菜の副菜</span><b>約100〜150mg</b></div>
-        <div class="kMealRow"><span>🥣 味噌汁1杯</span><b>約100〜180mg</b></div>
-        <div class="kMealRow total"><span>1食合計</span><b>約450〜600mg</b></div>
-      </div>
-      <div class="kMealNote">白ごはんはKが少なめです。主なKは、肉・魚、野菜、汁物の具から入ります。量や献立で大きく変わるため、厳密な計算ではなく全体像をつかむための目安です。</div>
-
-      <div class="kMisoBox">
-        <b>🥣 味噌汁は「味噌」より具で変わる</b>
-        <div>・わかめ・ねぎなど少量：<strong>約80〜150mg</strong><br>・豆腐・野菜入り：<strong>約150〜250mg</strong><br>・いも・かぼちゃ・豆・具だくさん：<strong>250〜400mg以上</strong>になることも</div>
-        <div class="kMisoTip">水分・塩分にも注意し、具を食べて汁は残すのが基本です。</div>
-      </div>
-
-      <div class="kExtraTitle">🍎 普通の食事に上乗せされやすいもの</div>
-      <div class="kExtraGrid">
-        <div class="kExtraItem"><b>🍌 バナナ1本</b>約300〜360mg</div>
-        <div class="kExtraItem"><b>🧃 濃い野菜ジュース1本</b>約500〜650mgの製品も</div>
-        <div class="kExtraItem"><b>🥜 ナッツひとつかみ</b>約150mg</div>
-        <div class="kExtraItem"><b>🍊 みかん2個</b>約200〜260mg</div>
-        <div class="kExtraItem wide"><b>🍹 果汁100％ジュース500mL</b>約550〜950mg</div>
-      </div>
-
-      <div class="kBudgetCaution"><b>注意：</b>約400〜600mgは「必ず食べてよい残り枠」ではありません。血清K、残尿、便通、透析量などで変わります。主治医・管理栄養士の指示を優先してください。</div>
-      <div class="kBudgetSource">※1日2,000mg以下：日本透析医学会「慢性透析患者の食事療法基準」。食品量は日本食品標準成分表などをもとにした概算です。</div>
-    </div>
-  </details>
-</div>
-<div class="sectionCue">① 最近<span class="increaseEm">増えた</span>ものを選んでください<small>食品・飲み物・最近の生活変化から選びます</small></div>
+<h2>🔍 何が増えましたか？</h2>
+<p class="lead">最近の食事から、当てはまるものをタップしてください。複数選べます。<a href="#" id="openBudgetFromDetect" style="display:inline-block;margin-top:6px;color:var(--main2);font-weight:900;text-decoration:none;font-size:13px">📊 1日の目安の考え方を見る →</a></p>
+<div class="sectionCue"><span class="increaseEm">増えた・多かった</span>ものを選んでください<small>食品・飲み物・最近の生活変化から選びます</small></div>
 <div id="foodgroups"></div>
 <div class="selectionSummary" id="selectionSummary">
   <div class="selectionText"><b>選択中：0件</b><span>タップした内容がここに表示されます</span></div>
 </div>
 <button class="btn" id="next1">次へ：お薬・便秘・体調</button></div>
-<div class="card step" data-step="1" style="display:none"><h2>③ お薬・便秘・体調</h2><p class="lead">思い当たるものだけタップしてください。複数OK。体調や薬が大きく変わった場合は、この画面とは別にスタッフへ伝えてください。</p>
+<div class="card step" data-step="1" style="display:none"><h2>💊 お薬・体調は？</h2><p class="lead">思い当たるものだけタップしてください。複数OK。体調や薬が大きく変わった場合は、この画面とは別にスタッフへ伝えてください。</p>
 <div class="chips" id="medchips"></div>
 <div class="constip"><h3 style="margin:0 0 6px">🚽 便秘はKの大敵</h3><p style="margin:0;font-size:15px">腎機能が落ちると<strong>うんちからKを捨てる働き</strong>も大事になります。便秘で出口がつまると<strong>Kが上がりやすい</strong>。お通じを整えるのが近道です。</p></div>
 <button class="btn" id="resultBtn">🕵️ 原因を発表</button></div>
-<div class="card step" data-step="2" style="display:none"><h2>🕵️ 原因発見</h2><div id="result"></div>
+<div class="card step" data-step="2" style="display:none"><h2>🕵️ 原因が見つかりました</h2><div id="result"></div>
 <button class="btn" data-go="staff">📄 レポートとして表示する</button>
 <button class="btn soft" id="redo">もう一度さがす</button></div>
 </section>
@@ -738,6 +756,15 @@ $('#back').onclick=back;
 const homeCookBtn=document.getElementById('homeCookBtn');
 if(homeCookBtn){
   homeCookBtn.onclick=()=>go('cookguide');
+}
+const openBudgetFromDetect=document.getElementById('openBudgetFromDetect');
+if(openBudgetFromDetect){
+  openBudgetFromDetect.addEventListener('click',e=>{
+    e.preventDefault();
+    go('home');
+    const d=document.getElementById('budgetDrawer');
+    if(d){d.open=true;setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'start'}),60);}
+  });
 }
 
 
@@ -1101,13 +1128,20 @@ function star(s){return '★★★★★'.slice(0,Math.max(1,Math.min(5,Math.rou
 function planFor(c){return ifthen[c.key]||c.act}
 function renderResult(){
  const top=st.causes[0];
- let html='<div class="action"><b>今回いちばん考えられる原因</b><br><span style="font-size:28px;font-weight:1000">'+top.icon+' '+top.title+'</span><p>'+top.sub+'</p></div>';
- html+=st.causes.map((c,i)=>`<div class="rank"><div class="badge b${i+1}">${i+1}</div><div><b>${c.icon} ${c.title}</b><div class="stars">${star(c.score)}</div><small>${c.sub}</small></div></div>`).join('');
+ let html='<div class="card" style="text-align:center;border:3px solid var(--main);background:linear-gradient(135deg,#eefbf7,#fff);box-shadow:0 10px 24px rgba(9,135,118,.16);margin:0 0 16px">'
+  +'<div style="font-size:13px;font-weight:1000;color:var(--main2);letter-spacing:.06em">🕵️ 今回、いちばん考えられる原因</div>'
+  +'<div style="font-size:46px;line-height:1.2;margin:8px 0 2px">'+top.icon+'</div>'
+  +'<div style="font-size:25px;font-weight:1000;color:var(--ink);margin-bottom:8px">'+top.title+'</div>'
+  +'<p style="margin:0;color:var(--sub);font-size:15px">'+top.sub+'</p></div>';
+ if(st.causes.length>1){
+  html+='<h3>他に考えられる原因</h3>';
+  html+=st.causes.map((c,i)=>`<div class="rank"><div class="badge b${i+1}">${i+1}</div><div><b>${c.icon} ${c.title}</b><div class="stars">${star(c.score)}</div><small>${c.sub}</small></div></div>`).join('');
+ }
  html+='<h3>💡 まず1つだけやるなら</h3><div class="action"><label style="font-weight:900;border-color:var(--main)">👉 '+planFor(top)+'</label>';
  html+=st.causes.slice(1).map(c=>`<label>・${planFor(c)}</label>`).join('')+'</div>';
  html+=`<div class="roundPanel"><h3>🩺 回診で確認する3つ</h3><div class="roundRow"><div class="num">1</div><div><b>原因</b><br>${top.icon} ${top.title}</div></div><div class="roundRow"><div class="num">2</div><div><b>次回までの作戦</b><br>${planFor(top)}</div></div><div class="roundRow"><div class="num">3</div><div><b>患者さんの言葉で確認</b><br>「次の採血まで、何をやってみますか？」</div></div></div>`;
  if(st.food.length||st.fruitdetail.length||st.drinkdetail.length||st.juicedetail.length||st.juicefreq.length||st.aojirukind||st.aojirumix||st.aojirufreq||st.chocoamt||st.chocofreq||st.cocoatype||st.cocoafreq||st.seasoningdetail.length||st.pattern.length||st.nutsamount){
-  html+='<h3>📖 食事の見方</h3>';
+  html+='<details class="morebox" style="margin-top:18px"><summary><b style="font-size:16px">📖 なぜ？を、もっとくわしく見る</b></summary><div class="morecontent">';
   if(st.pattern.length){html+='<div class="deepbox fruitbox"><h3>🍉 果物の続き方</h3>'+st.pattern.map(id=>{const f=foodPattern.find(x=>x[0]===id);if(!f)return'';return `<p><b>${f[1]} ${f[2]}</b><br>${f[3]}</p>`}).join('')+'<p><b>ポイント：</b>スイカ・みかん・びわは、1回量だけでなく「毎日続いたか」が重要です。</p></div>';}
   if(st.drinkdetail.length){html+='<div class="deepbox drinkbox"><h3>🍵 お茶・コーヒーの見方</h3><p><b>種類×濃さ×杯数</b>でKへの影響が変わります。玉露は高く、抹茶・粉茶は茶葉ごと飲むため注意。麦茶・ほうじ茶は比較的選びやすい飲み物です。</p>'+st.drinkdetail.map(id=>{const d=drinkDetail.find(x=>x[0]===id);if(!d)return'';return `<p><b>${d[1]} ${d[2]}（${d[3]}）</b><br>${d[5]}<br><b style="color:#155f78">→ ${d[6]}</b></p>`}).join('')+'</div>';}
   if(st.juicedetail.length){const freqs=(st.juicefreq||[]).map(id=>{const x=juiceFreq.find(f=>f[0]===id);return x?x[2]:''}).filter(Boolean).join('・');html+='<div class="deepbox" style="background:#fffafa;border-color:#efaaa7"><h3 style="color:#8f281f">🧃 野菜・果物ジュースの見方</h3><p><b>1本のK量×飲む量×回数</b>で確認します。小さい紙パックでも、製品によってKが数百mg含まれます。短時間で飲み切りやすいため、量を自覚しにくい点にも注意します。</p>'+(freqs?'<p><b>今回の量・回数：</b>'+freqs+'</p>':'')+st.juicedetail.map(id=>{const j=juiceDetail.find(x=>x[0]===id);if(!j)return'';return `<p><b>${j[1]} ${j[2]}（${j[3]}）</b><br>${j[5]}<br><b style="color:#8f281f">→ ${j[6]}</b></p>`}).join('')+'<div class="juiceSwap">まず1週間、ジュース類を麦茶・ほうじ茶・無糖炭酸水に置き換えてみましょう。</div></div>'; }
@@ -1124,6 +1158,7 @@ function renderResult(){
   if(selectedVeg.length){html+='<div class="deepbox" style="background:#f7fffb;border-color:#9fd8ca"><h3 style="color:#075f52">🥬 野菜・いも・豆類の見方</h3><p><b>種類×1回量×調理法</b>でKへの影響が変わります。数値は大きさ・品種・生／ゆで・製品によって変わる概算です。</p>'+selectedVeg.map(id=>{const f=vegDetail.find(x=>x[0]===id);if(!f)return'';return `<p><b>${f[1]} ${f[2]}（${f[3]}：K ${f[4]}）</b><br>${f[6]}<br><b style="color:#075f52">→ ${f[7]}</b></p>`}).join('')+'<div class="juiceSwap">野菜は、薄く切る → 水にさらす → たっぷりのお湯でゆでる → ゆで汁を捨てる、まで行うとKを減らしやすくなります。</div></div>';}
   if(st.nutsamount){const al={nuts_small:'指でつまむ程度（5〜6粒・約45mg）',nuts_handful:'片手ひとつかみ（15〜20粒・約150mg＝バナナ半分弱）',nuts_lot:'両手ひとつかみ／小袋1袋（約230〜380mg）'}[st.nutsamount];const fl={nuts_daily:'ほぼ毎日',nuts_sometimes:'時々',nuts_once:'1回だけ'}[st.nutspattern]||'';html+='<div class="deepbox"><h3>🥜 ナッツの見方</h3><p><b>今回：</b>'+al+(fl?'／'+fl:'')+'</p><p>ナッツは「1回ドカ食い」より、毎日つまむ・大袋から直食べで積み上がるタイプ。片手ひとつかみ＝バナナ半分弱なので、1回だけなら気にしすぎなくてOK。<b>毎日ひとつかみ・小袋1袋が続くと要注意</b>です（リンも多め）。</p><p><b style="color:var(--main2)">→ 皿に5〜6粒だけ出して袋は戻す。毎日続くなら隔日に。</b></p></div>';}
   html+=st.food.filter(id=>!vegDetail.some(v=>v[0]===id)).map(id=>{const f=food.find(x=>x[0]===id);if(!f)return'';return `<div class="info"><b>${f[1]} ${f[2]}</b><br>${f[4]}<br><b style="color:var(--main2)">→ ${f[5]}</b></div>`}).join('');
+  html+='</div></details>';
  }
  $('#result').innerHTML=html;
  localStorage.setItem('kreportHtml',html);

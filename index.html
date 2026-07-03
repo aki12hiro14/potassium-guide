@@ -68,6 +68,13 @@ h2{font-size:23px;margin:0 0 8px}h3{font-size:19px;margin:18px 0 8px}
   #ff6b5f 91.8% 100%);border-radius:26px;border:3px solid #fff;box-shadow:inset 0 0 0 1px #cddbd8,0 3px 10px rgba(0,0,0,.10)}
 .slider::-webkit-slider-thumb{appearance:none;width:48px;height:48px;border-radius:50%;background:#fff;border:6px solid var(--main);box-shadow:0 3px 12px rgba(0,0,0,.25)}
 .slider::-moz-range-thumb{width:48px;height:48px;border-radius:50%;background:#fff;border:6px solid var(--main)}
+.dragHint{position:absolute;top:28px;left:52.6%;width:52px;height:52px;transform:translateX(-50%);pointer-events:none;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .25s;z-index:1}
+#kslider.kunset~.dragHint{opacity:1}
+.dragHint .ring{position:absolute;width:100%;height:100%;border-radius:50%;background:rgba(9,135,118,.35);animation:dragRing 1.6s ease-out infinite}
+.dragHint .ring2{position:absolute;width:100%;height:100%;border-radius:50%;background:rgba(9,135,118,.35);animation:dragRing 1.6s ease-out infinite;animation-delay:.8s}
+.dragHint .arrows{position:relative;font-size:14px;font-weight:1000;color:#fff;background:var(--main);border-radius:999px;padding:3px 9px;box-shadow:0 3px 8px rgba(0,0,0,.22);animation:dragSway 1.6s ease-in-out infinite;white-space:nowrap}
+@keyframes dragRing{0%{transform:scale(.55);opacity:.75}100%{transform:scale(2.1);opacity:0}}
+@keyframes dragSway{0%,100%{transform:translateX(-11px)}50%{transform:translateX(11px)}}
 .scale{display:flex;justify-content:space-between;font-size:13px;color:var(--sub);margin-top:4px}
 .verdict{margin-top:16px;padding:16px;border-radius:18px;border:3px solid;text-align:center;font-weight:800}
 .vok{background:#eaf8f0;border-color:var(--green);color:#0d6843}
@@ -93,6 +100,34 @@ h2{font-size:23px;margin:0 0 8px}h3{font-size:19px;margin:18px 0 8px}
 .drinkchip.low{background:#eef9f6;border-color:#abdcca}.drinkchip.low .kmg{background:#dff4ec;color:#11694e}
 .drinkchip.sel{border-color:var(--main)!important;box-shadow:inset 0 0 0 3px rgba(9,135,118,.18),0 3px 10px rgba(9,135,118,.12);transform:translateY(-1px)}
 .drinkguide{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px}.drinkguide div{border-radius:14px;padding:11px;font-size:13px;border:1px solid var(--line);background:#fff}.drinkguide .good{background:#ecfff7;border-color:#9ddfc2}.drinkguide .warn{background:#fff7e6;border-color:#efcf8b}.drinkguide b{display:block;font-size:15px;margin-bottom:2px}
+.tlSection{margin:18px 0}
+.tlHead{font-weight:1000;font-size:15px;border-radius:12px;padding:9px 13px;margin-bottom:9px}
+.tlHead.red{background:#ffecec;color:#992020}
+.tlHead.yellow{background:#fff5dc;color:#865204}
+.tlHead.green{background:#eafff4;color:#0d6843}
+.tlGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.tlItem{border:1.5px solid var(--line);border-radius:14px;padding:11px 13px;font-size:13.5px;background:#fff;box-shadow:0 2px 7px rgba(10,80,70,.06)}
+.tlItem b{display:block;font-size:14.5px;margin-bottom:3px;line-height:1.3}
+.tlItem small{color:var(--sub)}
+@media(max-width:520px){.tlGrid{grid-template-columns:1fr}}
+.quizProgress{font-size:13px;color:var(--sub);font-weight:800;margin-bottom:6px}
+.quizQ{font-size:18px;font-weight:1000;text-align:center;margin:6px 0 14px}
+.quizPair{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+.quizOpt{border:2px solid var(--line);background:#fff;border-radius:18px;padding:18px 10px;text-align:center;font:inherit;color:inherit;box-shadow:0 3px 10px rgba(10,80,70,.08);cursor:pointer;transition:transform .07s ease}
+.quizOpt .qe{font-size:34px;display:block;margin-bottom:6px}
+.quizOpt b{font-size:14.5px;line-height:1.3;display:block}
+.quizOpt:active{transform:scale(.96)}
+.quizOpt.correct{border-color:var(--main);background:#e8f6f3}
+.quizOpt.wrong{border-color:#e0655e;background:#fff0ee;opacity:.75}
+.quizVs{font-weight:1000;color:var(--sub);font-size:13px}
+.quizResult{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
+.quizJudge{font-size:19px;font-weight:1000;text-align:center;margin-bottom:8px}
+.quizJudge.ok{color:var(--main2)}
+.quizJudge.ng{color:#992020}
+.quizNums{display:flex;flex-direction:column;gap:4px;font-size:13.5px;background:#f6faf9;border-radius:12px;padding:10px 12px;margin-bottom:10px}
+.quizNums b{color:var(--main2)}
+.quizNote{font-size:14px;color:var(--ink);margin:0 0 14px;line-height:1.55}
+@media(max-width:420px){.quizOpt .qe{font-size:28px}.quizOpt b{font-size:13px}}
 @media(max-width:520px){.drinkguide{grid-template-columns:1fr}}
 @media(max-width:380px){.drinkgrid{grid-template-columns:1fr}}
 @media(max-width:380px){.fruitgrid{grid-template-columns:1fr}}
@@ -196,8 +231,8 @@ h2{font-size:23px;margin:0 0 8px}h3{font-size:19px;margin:18px 0 8px}
 
 
 /* round-use UX */
-.quickStart{margin-top:16px;background:linear-gradient(135deg,#0b947f,#056b60);font-size:21px;padding:18px;border-radius:18px}
-.homeMainCta{position:relative;padding:20px 18px 20px 18px!important;font-size:24px!important;box-shadow:0 12px 24px rgba(5,107,96,.28)!important;border:2px solid rgba(255,255,255,.18)}
+.quickStart{margin-top:16px;background:linear-gradient(135deg,#ff6a45,#e8491d);font-size:21px;padding:18px;border-radius:18px;color:#fff}
+.homeMainCta{position:relative;padding:20px 18px 20px 18px!important;font-size:24px!important;box-shadow:0 12px 24px rgba(216,60,20,.32)!important;border:2px solid rgba(255,255,255,.35)}
 .homeMainCta:before{content:"まずここ";position:absolute;top:-14px;left:14px;background:#ffd54f;color:#5c3b00;border:2px solid #fff;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:1000;box-shadow:0 5px 12px rgba(120,82,0,.28);letter-spacing:.03em;animation:firstBadgePulse 1.8s ease-in-out infinite}
 @keyframes firstBadgePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 .homeSubhead{margin:18px 2px 8px;color:var(--sub);font-size:13px;font-weight:900;letter-spacing:.03em}
@@ -311,6 +346,7 @@ h2{font-size:23px;margin:0 0 8px}h3{font-size:19px;margin:18px 0 8px}
       <div class="targetband">目安 4.0〜5.3（中心 5.0）</div>
       <div class="bestline" aria-hidden="true"></div>
       <input id="kslider" class="slider kunset" type="range" min="3.0" max="6.8" step="0.1" value="5.0" aria-label="今回のカリウム値" aria-valuetext="未入力">
+      <div class="dragHint" aria-hidden="true"><span class="ring"></span><span class="ring2"></span><span class="arrows">⟷ ドラッグ</span></div>
     </div>
     <div class="scale"><span>3.0</span><span>4.0</span><span>5.0</span><span>5.5</span><span>6.0</span><span>6.5</span><span>6.8</span></div>
     <div id="verdict" class="verdict vneutral"><span class="big">まだ未入力です</span>丸を動かして、今回のK値を合わせてください。</div>
@@ -320,6 +356,9 @@ h2{font-size:23px;margin:0 0 8px}h3{font-size:19px;margin:18px 0 8px}
 
 <div class="homeSubhead">参考・学びたいときに</div>
 <div class="menu secondaryMenu">
+<button class="homeSub" data-go="why"><div class="mi">💡</div><div class="mt"><b>なんでカリウム、下げるの？</b><span>高いとどうなる？を3分で確認</span></div><span class="menuArrow">＋ 詳しく見る</span></button>
+<button class="homeSub" data-go="signal"><div class="mi">🚦</div><div class="mt"><b>たべもの信号（赤・黄・緑）</b><span>見直したい／注意／選びやすい、を一覧で確認</span></div><span class="menuArrow">＋ 詳しく見る</span></button>
+<button class="homeSub" data-go="quiz"><div class="mi">🕹️</div><div class="mt"><b>くらべるクイズ</b><span>「隠れカリウム」を見ぬくゲーム</span></div><span class="menuArrow">＋ 詳しく見る</span></button>
 <button class="homeSub" data-go="timing"><div class="mi">📅</div><div class="mt"><b>血液透析中の方へ、フルーツ食べるならいつ？</b><span>食べる日とタイミングを確認</span></div><span class="menuArrow">＋ 詳しく見る</span></button>
 </div>
 
@@ -340,25 +379,25 @@ h2{font-size:23px;margin:0 0 8px}h3{font-size:19px;margin:18px 0 8px}
         <div class="icon">📊</div>
         <div>
           <b>週3回血液透析中の方は、1日<span class="k2000">2,000mg以下</span>がひとつの目安</b>
-          <span>「原因さがし」では、この上乗せ分に何があったかを探します。</span>
+          <span>献立によって幅が大きいので、あくまで目安として使ってください。</span>
         </div>
       </div>
 
       <div class="kBudgetFlow">
         <div class="kBudgetPart base">
-          <span>🍚 いつもの朝・昼・夕食</span>
+          <span>🍚 低カリウムを意識した3食の一例</span>
           <strong>約1,400〜1,600mg</strong>
-          <small>ごはん・主菜・副菜・汁物を合わせた概算</small>
+          <small>ごはん・主菜・副菜・汁物を合わせた一例。肉・魚や野菜の量、加工食品によっては3食だけで2,000mgに達することもあります。</small>
         </div>
         <div class="kBudgetPlus">＋</div>
         <div class="kBudgetPart extra">
-          <span>🍎 目安までの差</span>
+          <span>🍎 見落としやすい上乗せ</span>
           <strong>約400〜600mg</strong>
-          <small>ここに果物・飲み物・おやつなどが上乗せされます</small>
+          <small>果物・飲み物・おやつなどが、気づかないうちに積み重なりやすい部分です</small>
         </div>
       </div>
 
-      <div class="kBudgetMsg">いつもの食事を減らす前に、果物・飲み物・おやつなど、何が上乗せされたかを探しましょう。</div>
+      <div class="kBudgetMsg">「残り〇〇mgまでOK」という意味ではありません。まずは、果物・飲み物・おやつなど、何が上乗せされたかを一緒に探しましょう。</div>
 
       <details class="kBudgetDetails">
         <summary>1食の内訳と、上乗せの具体例を見る</summary>
@@ -438,6 +477,93 @@ h2{font-size:23px;margin:0 0 8px}h3{font-size:19px;margin:18px 0 8px}
 
     <div class="cookNote">※減る割合は、食材・切り方・ゆで時間・湯量で変わります。調理してもKがゼロになるわけではないため、食べる量も大切です。</div>
     <button class="btn" data-go="home">表紙にもどる</button>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why" class="screen">
+  <div class="card">
+    <h2>💡 なんでカリウム、下げるの？</h2>
+    <p class="lead">3分で読めます。「なんとなく気をつける」より、理由がわかった方が続けやすくなります。</p>
+
+    <div class="cookHero"><b>結論：カリウムが高いと、はっきりした前ぶれがないまま、不整脈や心停止につながることがあります。</b><br>だからこそ、症状が出る前に食事や生活で防ぐことが大切です。</div>
+
+    <h3 style="color:#7a4d00">🫀 カリウムと心臓の関係</h3>
+    <p style="margin:0 0 6px">カリウムは筋肉や心臓の動きに欠かせないミネラルです。ただし多すぎると、心臓を動かす電気信号が乱れ、<b>不整脈</b>を起こすことがあります。重い場合は、突然の<b>心停止</b>につながることもある、体にとって重要な数字です。</p>
+
+    <div class="cookSteps">
+      <div class="cookStep"><div class="num">😶</div><div><b>ほとんど症状が出ません</b><br><small>K値が上がっても、初期は自覚症状がないことが多いです。</small></div></div>
+      <div class="cookStep"><div class="num">⚡</div><div><b>手足のしびれ・脱力感・動悸</b><br><small>やや高い状態が続くと、これらの症状が出ることがあります。</small></div></div>
+      <div class="cookStep"><div class="num">🚨</div><div><b>不整脈・突然の心停止</b><br><small>高い状態が続くと、前ぶれなく重い不整脈が起きることがあります。</small></div></div>
+    </div>
+
+    <h3 style="color:#7a4d00;margin-top:18px">なぜ透析中の方は特に注意が必要？</h3>
+    <p style="margin:0">健康な腎臓は、余分なカリウムを尿として毎日少しずつ出しています。腎機能が下がると、この働きが弱くなり、<b>週3回の透析</b>が主なカリウムの出口になります。透析と透析の間、特に<b>2日空く日（土日など）</b>は、体にカリウムがたまりやすい時間です。</p>
+
+    <h3 style="color:#7a4d00;margin-top:18px">今のK値、どのあたり？</h3>
+    <div class="cookCompare">
+      <div class="cookCard best"><span class="mark">◎</span><b>3.5〜5.0</b>ベストな目安の範囲</div>
+      <div class="cookCard mid"><span class="mark">△</span><b>5.3〜6.0</b>少し高め。原因を振り返るタイミング</div>
+      <div class="cookCard bad"><span class="mark">⚠️</span><b>6.0以上</b>要注意。6.5以上、症状があればすぐ連絡を</div>
+    </div>
+    <div class="cookNote">※目安は施設・主治医の指示によって異なります。ご自身の目標値は診察やスタッフとの面談で確認してください。</div>
+
+    <button class="btn" data-go="detect">🔎 今回の原因をさがす</button>
+    <button class="btn soft" data-go="home">表紙にもどる</button>
+  </div>
+</section>
+
+<!-- SIGNAL -->
+<section id="signal" class="screen">
+  <div class="card">
+    <h2>🚦 たべもの信号</h2>
+    <p class="lead">「まず見直したいもの」「量・頻度に注意」「比較的選びやすいもの」を色分けした早見表です。原因さがしとは別に、いつでも確認できます。</p>
+
+    <div class="tlSection">
+      <div class="tlHead red">🔴 まず見直したい（量・頻度が多いと特に注意）</div>
+      <div class="tlGrid">
+        <div class="tlItem"><b>🍌 生の果物を毎日・複数個</b><small>バナナ・柿・メロン・キウイなど</small></div>
+        <div class="tlItem"><b>🧃 濃い野菜・果物ジュース</b><small>小さな1本でも数百mgのことも</small></div>
+        <div class="tlItem"><b>🌿 青汁（特に牛乳割り・毎日）</b><small>割り方と回数で大きく変わる</small></div>
+        <div class="tlItem"><b>🍇 ドライフルーツ</b><small>水分が抜けて濃縮されている</small></div>
+        <div class="tlItem"><b>⚠️ 減塩しお・カリウム塩調味料</b><small>製品によりKが非常に多い</small></div>
+        <div class="tlItem"><b>🥔 いも・かぼちゃ（ゆでこぼしなし）</b><small>大きいまま調理すると抜けにくい</small></div>
+      </div>
+    </div>
+
+    <div class="tlSection">
+      <div class="tlHead yellow">🟡 量・頻度に注意</div>
+      <div class="tlGrid">
+        <div class="tlItem"><b>☕ コーヒー・濃い煎茶</b><small>杯数が増えると積み上がる</small></div>
+        <div class="tlItem"><b>🍅 トマトジュース</b><small>毎朝の習慣は要チェック</small></div>
+        <div class="tlItem"><b>🥛 豆乳・きなこ</b><small>毎日大量だと注意</small></div>
+        <div class="tlItem"><b>🥜 ナッツ・チョコ</b><small>ひとつかみ以上が毎日は注意</small></div>
+        <div class="tlItem"><b>🥣 具だくさんの味噌汁</b><small>いも・かぼちゃ・豆の具は多め</small></div>
+        <div class="tlItem"><b>🥑 アボカド</b><small>健康食として頻繁に増やす時</small></div>
+      </div>
+    </div>
+
+    <div class="tlSection">
+      <div class="tlHead green">🟢 比較的選びやすい</div>
+      <div class="tlGrid">
+        <div class="tlItem"><b>🍵 ほうじ茶・麦茶・ウーロン茶・紅茶</b><small>お茶の中では選びやすい</small></div>
+        <div class="tlItem"><b>🍎 りんご・ぶどう（適量）</b><small>果物の中では使いやすい候補</small></div>
+        <div class="tlItem"><b>🥬 ゆでこぼした野菜</b><small>薄切りにして、ゆで汁を捨てる</small></div>
+        <div class="tlItem"><b>🍚 白ごはん</b><small>K自体は少なめ</small></div>
+      </div>
+    </div>
+
+    <div class="cookNote">※色分けは「量・頻度が多いと」の目安です。1回だけなら緑でなくても大きな原因になりにくいこともあります。最終的な制限は主治医・管理栄養士の指示に従ってください。</div>
+    <button class="btn" data-go="home">表紙にもどる</button>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="screen">
+  <div class="card">
+    <h2>🕹️ くらべるクイズ</h2>
+    <p class="lead">2つのうち、カリウムが多いのはどっち？「隠れカリウム」を見ぬく練習です。</p>
+    <div id="quizBody"></div>
   </div>
 </section>
 
@@ -599,17 +725,17 @@ const food=[
 
 
 const fruitDetail=[
-['avocadoF','🥑','アボカド','1/2個','約500mg','かなり高','果物の中でもトップクラス。健康食として増えると危険です。','1/4個まで、毎日は避ける'],
-['banana','🍌','バナナ','1本','約320mg','高','果物の中でも高め。毎日1本は上がりやすいです。','半分にする／毎日をやめる'],
-['melon','🍈','メロン','1切れ','約300mg','高','水分が多く食べやすいですが、1切れでKは多めです。','小さめ1切れまで'],
-['persimmon','🟧','柿','1個','約300mg','高','秋に連日になりやすく、1個あたりKも多めです。','半分まで、毎日は避ける'],
-['driedF','🟤','ドライフルーツ','ひとつかみ約20g','約150〜300mg','濃縮注意','レーズン・干し柿・干しあんず等。水分が抜けて濃縮され、見た目以上に果物を食べたことになります。小袋1袋・毎日で積み上がります。','小皿に少量。毎日・小袋1袋は避ける'],
-['kiwi','🥝','キウイ','1個','約250mg','高','小さいのにKが多め。毎日だと積み上がります。','半分〜1個、頻度を決める'],
-['watermelon','🍉','スイカ','1切れ','約180mg','毎日注意','1切れは中等度でも、水分が多く食べやすく、夏に毎日・大きく・何切れも食べるとKが上がります。','小さめ1切れを目安。毎日は避ける'],
-['apple','🍎','りんご','1/2個','約150mg','低〜中','果物の中では使いやすい候補。ただし丸ごと毎日なら注意です。','半分を目安に'],
-['grape','🍇','ぶどう','小房','約130mg','低〜中','1回量なら比較的使いやすいですが、房で食べ過ぎると増えます。','小房に分ける'],
 ['mikan','🍊','みかん','1個','約100〜130mg','毎日注意','1個あたりは中等度でも、冬に毎日2〜4個になると高Kの原因になります。患者さんは「みかんくらい」と思いやすいので要注意です。','1日1個まで。毎日続くなら回数を決める'],
-['biwa','🟠','びわ','1個','約50〜80mg','毎日注意','1個あたりは少なめでも、小さいため5個・10個と食べやすく、旬の時期に毎日続くと高Kの原因になります。','最初に個数を決める。連日は避ける']
+['banana','🍌','バナナ','1本','約320mg','高','果物の中でも高め。毎日1本は上がりやすいです。','半分にする／毎日をやめる'],
+['watermelon','🍉','スイカ','1切れ','約180mg','毎日注意','1切れは中等度でも、水分が多く食べやすく、夏に毎日・大きく・何切れも食べるとKが上がります。','小さめ1切れを目安。毎日は避ける'],
+['biwa','🟠','びわ','1個','約50〜80mg','毎日注意','1個あたりは少なめでも、小さいため5個・10個と食べやすく、旬の時期に毎日続くと高Kの原因になります。','最初に個数を決める。連日は避ける'],
+['kiwi','🥝','キウイ','1個','約250mg','高','小さいのにKが多め。毎日だと積み上がります。','半分〜1個、頻度を決める'],
+['persimmon','🟧','柿','1個','約300mg','高','秋に連日になりやすく、1個あたりKも多めです。','半分まで、毎日は避ける'],
+['melon','🍈','メロン','1切れ','約300mg','高','水分が多く食べやすいですが、1切れでKは多めです。','小さめ1切れまで'],
+['driedF','🟤','ドライフルーツ','ひとつかみ約20g','約150〜300mg','濃縮注意','レーズン・干し柿・干しあんず等。水分が抜けて濃縮され、見た目以上に果物を食べたことになります。小袋1袋・毎日で積み上がります。','小皿に少量。毎日・小袋1袋は避ける'],
+['avocadoF','🥑','アボカド','1/2個','約500mg','かなり高','ふだんの量は少なくても、健康食として増やすと1回でKが大きく上乗せされます。','1/4個まで、毎日は避ける'],
+['apple','🍎','りんご','1/2個','約150mg','低〜中','果物の中では使いやすい候補。ただし丸ごと毎日なら注意です。','半分を目安に'],
+['grape','🍇','ぶどう','小房','約130mg','低〜中','1回量なら比較的使いやすいですが、房で食べ過ぎると増えます。','小房に分ける']
 ];
 
 const vegDetail=[
@@ -800,7 +926,7 @@ function buildFoodChips(){
  const foodChipHtml=id=>{const f=food.find(x=>x[0]===id);const wide=id==='corn'?' wide':'';return f?`<button class="chip${wide}" data-type="food" data-id="${f[0]}"><span class="e">${f[1]}</span><b>${f[2]}</b><small>${f[3]}</small></button>`:'';};
  $('#foodgroups').innerHTML=cats.map(cat=>{
    let extra='';
-   if(cat==='果物') extra=`<button class="chip detailTrigger" id="fruitTrigger" data-type="detailtrigger" data-target="fruitInline"><span class="e">🍎</span><b>果物</b><small>生・ドライ。バナナ・みかん・スイカ等</small><span class="hint">種類と量を選ぶ</span><span class="selectedMini">0個選択中</span></button><div class="inlineDetail fruitInline" id="fruitInline"><div class="inlineHead"><div><h3>🍎 どの果物ですか？</h3><p>複数選べます。選び終えたら閉じても、ほかの食品を続けて選べます。</p></div><button type="button" class="inlineClose" data-close-detail="fruitInline">閉じる</button></div><p class="minilead"><b>表示順：</b>1個・1回量あたりのK目安が多い順。スイカ・みかん・びわも、毎日・複数個なら注意です。</p><div class="fruitgrid" id="fruitdetailchips"></div><div class="fruitHabit"><h3>🍉 果物は何日くらい続きましたか？</h3><p>ここが大事です。スイカ・みかん・びわは、1回だけよりも<strong>毎日続けた時</strong>にKが上がりやすくなります。</p><div class="chips" id="foodpatternchips"></div><h3 style="margin-top:16px">📅 次の透析まで長くあく日に、果物を食べましたか？</h3><p class="minilead">金曜の透析後から日曜、または土曜の透析後から月曜などです。この間に果物が続くと、次の透析前までKがたまりやすくなります。</p><div class="chips" id="fruitgapchips"></div><div class="twoDayAlert"><span class="bigline">⚠️ 特に注意</span><b>次の透析まで長くあく日 × 連日 × 多め</b>が重なると、K高値のリスクが高くなります。<br>食べるなら、次の透析まで長くあかない日に少量を。</div><div class="fruitRule"><b>覚え方：</b>「食べたか」だけでなく、<b>毎日続いたか・次の透析まで長くあく日だったか</b>を見る。連日でなく、長くあく日でもなければ、大きな原因になりにくいことが多いです。</div></div><button type="button" class="inlineDone" data-close-detail="fruitInline">選択を完了して閉じる</button></div>`;
+   if(cat==='果物') extra=`<button class="chip detailTrigger" id="fruitTrigger" data-type="detailtrigger" data-target="fruitInline"><span class="e">🍎</span><b>果物</b><small>生・ドライ。バナナ・みかん・スイカ等</small><span class="hint">種類と量を選ぶ</span><span class="selectedMini">0個選択中</span></button><div class="inlineDetail fruitInline" id="fruitInline"><div class="inlineHead"><div><h3>🍎 どの果物ですか？</h3><p>複数選べます。選び終えたら閉じても、ほかの食品を続けて選べます。</p></div><button type="button" class="inlineClose" data-close-detail="fruitInline">閉じる</button></div><p class="minilead"><b>表示順：</b>日本でよく食べられていて、原因になりやすい順に並べています。1個・1回量の多さだけでなく、毎日食べやすいかも考えています。</p><div class="fruitgrid" id="fruitdetailchips"></div><div class="fruitHabit"><h3>🍉 果物は何日くらい続きましたか？</h3><p>ここが大事です。スイカ・みかん・びわは、1回だけよりも<strong>毎日続けた時</strong>にKが上がりやすくなります。</p><div class="chips" id="foodpatternchips"></div><h3 style="margin-top:16px">📅 次の透析まで長くあく日に、果物を食べましたか？</h3><p class="minilead">金曜の透析後から日曜、または土曜の透析後から月曜などです。この間に果物が続くと、次の透析前までKがたまりやすくなります。</p><div class="chips" id="fruitgapchips"></div><div class="twoDayAlert"><span class="bigline">⚠️ 特に注意</span><b>次の透析まで長くあく日 × 連日 × 多め</b>が重なると、K高値のリスクが高くなります。<br>食べるなら、次の透析まで長くあかない日に少量を。</div><div class="fruitRule"><b>覚え方：</b>「食べたか」だけでなく、<b>毎日続いたか・次の透析まで長くあく日だったか</b>を見る。連日でなく、長くあく日でもなければ、大きな原因になりにくいことが多いです。</div></div><button type="button" class="inlineDone" data-close-detail="fruitInline">選択を完了して閉じる</button></div>`;
    if(cat==='飲み物・健康飲料') extra=`<button class="chip detailTrigger" id="drinkTrigger" data-type="detailtrigger" data-target="drinkInline"><span class="e">🍵</span><b>お茶・コーヒー</b><small>種類・濃さ・杯数を確認</small><span class="hint">詳しく選ぶ</span><span class="selectedMini">0個選択中</span></button><div class="inlineDetail drinkInline" id="drinkInline"><div class="inlineHead"><div><h3>🍵 何をよく飲みましたか？</h3><p>同じお茶でもK量は違います。複数選べます。</p></div><button type="button" class="inlineClose" data-close-detail="drinkInline">閉じる</button></div><p class="minilead"><b>薄い赤：</b>Kが多い　<b>黄色：</b>杯数に注意　<b>緑：</b>比較的選びやすい</p><div class="drinkgrid" id="drinkdetailchips"></div><div class="drinkguide"><div class="warn" style="background:#fff0f0;border-color:#efa4a4"><b>🔴 Kが多い</b>玉露／抹茶・粉茶</div><div class="warn"><b>🟡 杯数に注意</b>コーヒー／濃い煎茶</div><div class="good"><b>🟢 比較的選びやすい</b>ほうじ茶／ウーロン茶／紅茶／麦茶</div></div><button type="button" class="inlineDone" data-close-detail="drinkInline">選択を完了して閉じる</button></div><button class="chip detailTrigger" id="juiceTrigger" data-type="detailtrigger" data-target="juiceInline"><span class="e">🧃</span><b>野菜・果物ジュース</b><small>種類・量・回数を確認</small><span class="hint">詳しく選ぶ</span><span class="selectedMini">未入力</span></button><div class="inlineDetail juiceInline" id="juiceInline"><div class="inlineHead"><div><h3>🧃 野菜・果物ジュース</h3><p>飲んだ種類と、量・回数を選んでください。</p></div><button type="button" class="inlineClose" data-close-detail="juiceInline">閉じる</button></div><h3 class="sectionMini">① 何を飲みましたか？</h3><p class="minilead">複数選べます。赤い項目ほど、まず見直したい飲み物です。</p><div class="drinkgrid" id="juicedetailchips"></div><h3 class="sectionMini">② 量・回数は？</h3><p class="minilead">「毎朝」と「2本以上」は両方選べます。</p><div class="chips" id="juicefreqchips"></div><div class="juiceAlert"><span class="bigline">⚠️ 小さい紙パック1本でも見逃さない</span>濃い・栄養強化型の中には、<b>200mLでK約500〜650mg</b>の製品があります。<div class="juiceCompare"><div class="box">🧃 小さい紙パック<br>200mL</div><div class="eq">≒</div><div class="box">🍌 バナナ<br>約1.5〜2本分</div></div><p style="margin:9px 0 0">液体だから必ず危険というより、<b>数百mgを短時間で取りやすい</b>ことが問題です。</p></div><div class="juiceRule"><b>パッケージの見方：</b><br>①「野菜100％」「無添加」だけで安心しない<br>② 栄養成分表示に<b>カリウム（mg）</b>があれば確認<br>③ <b>1本全部・毎日・大ボトル</b>になっていないかを見る</div><div class="juiceSwap">✅ まずやること：今週はジュース類を休み、麦茶・ほうじ茶・無糖の炭酸水へ置き換えてみましょう。</div><button type="button" class="inlineDone" data-close-detail="juiceInline">入力を完了して閉じる</button></div><button class="chip detailTrigger" id="aojiruTrigger" data-type="detailtrigger" data-target="aojiruInline"><span class="e">🌿</span><b>青汁・健康食品</b><small>種類・割り方・回数を確認</small><span class="hint">詳しく選ぶ</span><span class="selectedMini">未入力</span></button><div class="inlineDetail drinkInline" id="aojiruInline"><div class="inlineHead"><div><h3>🌿 青汁、どのように飲みましたか？</h3><p>粉末か液体か、何で割ったか、回数を選んでください。</p></div><button type="button" class="inlineClose" data-close-detail="aojiruInline">閉じる</button></div><div class="foodcat">① 青汁の種類</div><div class="chips"><button class="chip" data-type="aojirukind" data-id="aojiru_powder"><span class="e">🟡</span><b>粉末タイプ</b><small>1包を水で：約30〜150mg</small></button><button class="chip" data-type="aojirukind" data-id="aojiru_liquid"><span class="e">🔴</span><b>冷凍・ストレート液体</b><small>100g前後：約150〜400mg以上</small></button></div><div class="foodcat">② 何で割りましたか？</div><div class="chips"><button class="chip" data-type="aojirumix" data-id="aojiru_water"><span class="e">💧</span><b>水・お湯</b><small>青汁そのもののK量</small></button><button class="chip" data-type="aojirumix" data-id="aojiru_milk"><span class="e">🥛</span><b>牛乳</b><small>200mLでK約300mgが上乗せ</small></button><button class="chip wide" data-type="aojirumix" data-id="aojiru_soymilk"><span class="e">🫘</span><b>豆乳</b><small>商品・量によりKが上乗せ</small></button></div><div class="foodcat">③ どれくらい続きましたか？</div><div class="chips"><button class="chip" data-type="aojirufreq" data-id="aojiru_daily"><span class="e">🔁</span><b>ほぼ毎日</b><small>健康習慣として続けている</small></button><button class="chip" data-type="aojirufreq" data-id="aojiru_twice"><span class="e">2️⃣</span><b>1日2回以上</b><small>朝夕など複数回</small></button><button class="chip wide" data-type="aojirufreq" data-id="aojiru_once"><span class="e">1️⃣</span><b>今回1回だけ</b><small>たまに飲んだ</small></button></div><div class="juiceAlert"><span class="bigline">⚠️ 青汁は「割り方」と「毎日」が盲点</span>粉末青汁を牛乳200mLで割ると、1杯で<b>約330〜450mg</b>になることがあります。液体タイプは製品によってさらに多い場合があります。</div><div class="juiceRule"><b>確認する3点：</b><br>① 粉末か、冷凍・ストレートか<br>② 水・牛乳・豆乳のどれで割ったか<br>③ 1日何杯、何日続けたか</div><div class="juiceSwap">✅ 商品の袋・箱を医療スタッフに見せ、栄養成分表示のカリウム量を確認しましょう。</div><button type="button" class="inlineDone" data-close-detail="aojiruInline">入力を完了して閉じる</button></div>`;
    if(cat==='野菜・いも・豆類') extra=`<button class="chip detailTrigger" id="vegTrigger" data-type="detailtrigger" data-target="vegInline"><span class="e">🥬</span><b>野菜・いも・豆類</b><small>種類・1回量・調理法を確認</small><span class="hint">種類と量を選ぶ</span><span class="selectedMini">0個選択中</span></button><div class="inlineDetail vegInline" id="vegInline"><div class="inlineHead"><div><h3>🥬 どの野菜・いも・豆類ですか？</h3><p>複数選べます。選び終えたら閉じても、ほかの食品を続けて選べます。</p></div><button type="button" class="inlineClose" data-close-detail="vegInline">閉じる</button></div><p class="minilead"><b>表示順：</b>一般的な1回量でKが多くなりやすいものを上段に表示しています。数値は大きさ・品種・生／ゆで・製品によって変わる概算です。</p><div class="fruitgrid" id="vegdetailchips"></div><div class="vegGuide"><b>🥬 野菜は「何を食べたか」だけでなく、調理法も重要です。</b><br>生・焼く・蒸す・電子レンジだけではKが外へ逃げにくい食材があります。薄く切る → 水にさらす → たっぷりのお湯でゆでる → ゆで汁を捨てる、まで行うと減らしやすくなります。</div><button type="button" class="inlineDone" data-close-detail="vegInline">選択を完了して閉じる</button></div>`;
    if(cat==='おやつ・間食') extra=`<button class="chip detailTrigger" id="nutsTrigger" data-type="detailtrigger" data-target="nutsInline"><span class="e">🥜</span><b>ナッツ・豆菓子</b><small>量・頻度を確認</small><span class="hint">どれくらいOKか見る</span><span class="selectedMini">未入力</span></button><div class="inlineDetail nutsInline" id="nutsInline"><div class="inlineHead"><div><h3>🥜 ナッツ、どれくらいならOK？</h3><p>量と頻度を選んでください。1回だけなら、気にしすぎなくてOKです。</p></div><button type="button" class="inlineClose" data-close-detail="nutsInline">閉じる</button></div><p class="minilead"><b>① どれくらい食べましたか？</b><br>アーモンドを目安に、実際に食べる量でKを確認します。</p><div class="fruitgrid"><button class="fruitchip" data-type="nutsamount" data-id="nuts_small"><span class="top"><span class="e">🥜</span>指でつまむ程度</span><small>5〜6粒：1回量なら大きな原因になりにくい量です。</small><span class="kmg">K 約45mg・少なめ</span></button><button class="fruitchip" data-type="nutsamount" data-id="nuts_handful"><span class="top"><span class="e">✋</span>片手ひとつかみ</span><small>15〜20粒：毎日続くとKとリンが積み上がります。</small><span class="kmg">K 約150mg・中</span></button><button class="fruitchip wide" data-type="nutsamount" data-id="nuts_lot"><span class="top"><span class="e">📦</span>両手・小袋1袋</span><small>約30〜50g：袋から直接食べると量が増えやすいです。</small><span class="kmg">K 約230〜380mg・高</span></button></div><p class="minilead" style="margin-top:12px"><b>② どれくらいの頻度？</b></p><div class="chips"><button class="chip" data-type="nutspattern" data-id="nuts_daily"><span class="e">🔁</span><b>ほぼ毎日</b><small>毎日つまむ習慣</small></button><button class="chip" data-type="nutspattern" data-id="nuts_sometimes"><span class="e">📅</span><b>時々</b><small>週1〜3回</small></button><button class="chip wide" data-type="nutspattern" data-id="nuts_once"><span class="e">1️⃣</span><b>1回だけ</b><small>たまに</small></button></div><div class="info" style="margin-top:14px"><b>OKライン：</b>指でつまむ5〜6粒くらいなら、気にしすぎなくて大丈夫。<br><b style="color:#992020">陽性（要注意）ライン：</b>片手ひとつかみ以上が<b>毎日</b>、または<b>次の透析まで長くあく日に小袋1袋</b>。</div><div class="deepbox"><h3>📏 ナッツの量とカリウム（勉強メモ）</h3><p class="minilead">アーモンド100gでK約760mg。「100gも食べない」ので、実際に食べる量で考えるのがコツ。</p><p>・5粒（約6g）… 約45mg<br>・10粒（約12g）… 約90mg<br>・片手ひとつかみ 15〜20粒（約20g）… 約150mg<br>・小袋1袋（約30g）… 約230mg<br>・50g … 約380mg</p><p><b>くらべると：</b>バナナ1本=約300〜400mg。だから<b>ひとつかみのナッツ＝バナナ半分弱</b>。1回だけなら、むしろ生の果物のほうがKは多いこともあります。</p><p><b>でも注意なのは：</b>ナッツは小さくて量を自覚しにくく、大袋から直食べ→毎日…で積み上がるタイプ。<b>リンも多め</b>なので、透析ではK＋Pの両面で確認します。</p><p><b>主役は果物・ジュース・芋・トマト。ナッツは“補助的な確認項目”です。</b></p><p style="color:var(--main2);font-weight:900">→ 食べるなら皿に5〜6粒だけ出して袋は戻す。毎日ひとつかみが続くなら隔日に。小袋は「1回で1袋」をやめて半分に。</p></div><button type="button" class="inlineDone" data-close-detail="nutsInline">入力を完了して閉じる</button></div><button class="chip detailTrigger" id="chocoTrigger" data-type="detailtrigger" data-target="chocoInline"><span class="e">🍫</span><b>チョコ・ココア</b><small>食べた量・作り方・頻度を確認</small><span class="hint">詳しく選ぶ</span><span class="selectedMini">未入力</span></button><div class="inlineDetail chocoInline" id="chocoInline"><div class="inlineHead"><div><h3>🍫 チョコ・ココア、どれくらい？</h3><p>食べたもの・飲んだものを、それぞれ選んでください。複数OKです。</p></div><button type="button" class="inlineClose" data-close-detail="chocoInline">閉じる</button></div><div class="foodcat">① 🍫 チョコレート</div><p class="minilead">どれくらい食べましたか？ 高カカオ製品は特に注意です。</p><div class="fruitgrid" id="chocoamtchips"></div><div class="chips" id="chocofreqchips" style="margin-top:9px"></div><div class="info" style="margin-top:12px"><b>チョコの注意点：</b><br>1〜2かけなら、大きな原因になりにくい量です。要注意なのは、<b>高カカオを何枚も食べる、板チョコを半分〜1枚、少量でも毎日続ける</b>場合です。袋や板のまま食べず、最初にお皿へ出しましょう。</div><div class="foodcat">② ☕ ココア</div><p class="minilead">牛乳で作るか、お湯で作るかでK量が大きく変わります。</p><div class="fruitgrid" id="cocoatypechips"></div><div class="chips" id="cocoafreqchips" style="margin-top:9px"></div><div class="cocoaClinical"><b>⚠️ 毎日飲む場合は要確認</b><br>銅補給などの目的で勧められていても、牛乳で作って1日2杯なら<b>K約660mg</b>になることがあります。「粉の種類」「牛乳かお湯か」「1日何杯か」を医療スタッフに伝えてください。</div><div class="deepbox"><h3>📏 目安</h3><p>・ミルクチョコ1〜2かけ：K約20〜45mg<br>・板チョコ半分：約100〜160mg<br>・板チョコ1枚：約200〜330mg<br>・ココア＋お湯：1杯 約140〜150mg<br>・ココア＋牛乳：1杯 約320〜330mg</p><p><small>※商品、粉の量、牛乳量によって異なります。ホワイトチョコはKが比較的少なめでも、脂質・糖質など別の点があるため「たくさん食べてよい」という意味ではありません。</small></p></div><button type="button" class="inlineDone" data-close-detail="chocoInline">選択を完了して閉じる</button></div>`;
@@ -1328,6 +1454,57 @@ function renderTiming(kind='mwf'){
 }
 document.addEventListener('click',e=>{const b=e.target.closest('[data-sch]'); if(b)renderTiming(b.dataset.sch);});
 renderTiming('mwf');
+
+/* ---------- くらべるクイズ ---------- */
+const quizData=[
+ {a:{icon:'🥑',label:'アボカド 1/2個',mg:500,disp:'約500mg'},b:{icon:'🍌',label:'バナナ 1本',mg:320,disp:'約320mg'},note:'アボカドは1/2個でも果物の中でトップクラス。「そんなに食べていないのに」が起こりやすい果物です。'},
+ {a:{icon:'🧃',label:'濃い野菜ジュース 1本(200mL)',mg:575,disp:'約500〜650mg'},b:{icon:'🍌',label:'バナナ 1.5〜2本',mg:520,disp:'約480〜720mg相当'},note:'小さな紙パック1本でも、バナナ1.5〜2本分に相当することがあります。'},
+ {a:{icon:'⚠️',label:'減塩しょうゆ(カリウム塩) 大さじ1',mg:800,disp:'製品により約800mg前後'},b:{icon:'🟤',label:'ふつうのしょうゆ 大さじ1',mg:45,disp:'約25〜70mg'},note:'「カリウム塩」表示のある減塩調味料は、ふつうの調味料よりKがずっと多いことがあります。'},
+ {a:{icon:'🥜',label:'ナッツ ひとつかみ(15〜20粒)',mg:150,disp:'約150mg'},b:{icon:'🍌',label:'バナナ 1本',mg:320,disp:'約320mg'},note:'意外にも、バナナ1本の方がKは多めです。ナッツは「量を自覚しにくく、毎日続く」ことの方が心配です。'},
+ {a:{icon:'☕',label:'ココア(牛乳で作る) 1杯',mg:325,disp:'約320〜330mg'},b:{icon:'🍫',label:'ミルクチョコ 1〜2かけ',mg:33,disp:'約20〜45mg'},note:'チョコそのものは少量ならKは少なめですが、ココアを牛乳で毎日飲むとKが積み上がります。'},
+ {a:{icon:'🍠',label:'焼きいも 中1/2本',mg:475,disp:'約450〜500mg'},b:{icon:'🍚',label:'白ごはん 1膳',mg:45,disp:'約40〜50mg'},note:'白ごはんはKが少なめです。いも類はゆでこぼしをしないと、Kが多いまま残ります。'}
+];
+let quizIdx=0,quizScore=0,quizAnswered=false;
+function renderQuiz(){
+ const body=$('#quizBody'); if(!body)return;
+ if(quizIdx>=quizData.length){
+  body.innerHTML=`<div class="cookHero"><b>おつかれさまでした！</b><br>${quizScore} / ${quizData.length} 問正解でした。</div><p style="text-align:center;color:var(--sub);font-size:14px;margin:14px 0">「隠れカリウム」は、見た目や量の少なさだけでは判断できません。心配な食品は、量と頻度を意識するか、スタッフに確認してみましょう。</p><button class="btn" id="quizRestart">もう一度挑戦する</button><button class="btn soft" data-go="home">表紙にもどる</button>`;
+  $('#quizRestart').onclick=()=>{quizIdx=0;quizScore=0;renderQuiz();};
+  $$('#quizBody [data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+  return;
+ }
+ const q=quizData[quizIdx];
+ quizAnswered=false;
+ body.innerHTML=`<div class="quizProgress">問題 ${quizIdx+1} / ${quizData.length}　正解 ${quizScore}問</div>
+<div class="quizQ">カリウムが多いのはどっち？</div>
+<div class="quizPair">
+<button class="quizOpt" data-side="a"><span class="qe">${q.a.icon}</span><b>${q.a.label}</b></button>
+<div class="quizVs">VS</div>
+<button class="quizOpt" data-side="b"><span class="qe">${q.b.icon}</span><b>${q.b.label}</b></button>
+</div>
+<div class="quizResult" id="quizResult" style="display:none"></div>`;
+ $$('#quizBody .quizOpt').forEach(btn=>{
+  btn.onclick=()=>{
+   if(quizAnswered)return;
+   quizAnswered=true;
+   const side=btn.dataset.side;
+   const correctSide=q.a.mg>=q.b.mg?'a':'b';
+   const isCorrect=side===correctSide;
+   if(isCorrect)quizScore++;
+   $$('#quizBody .quizOpt').forEach(b2=>{b2.classList.add(b2.dataset.side===correctSide?'correct':'wrong');b2.disabled=true;});
+   const res=$('#quizResult');
+   res.style.display='block';
+   res.innerHTML=`<div class="quizJudge ${isCorrect?'ok':'ng'}">${isCorrect?'✅ 正解！':'❌ 不正解'}</div>
+<div class="quizNums"><span>${q.a.icon} ${q.a.label}：<b>${q.a.disp}</b></span><span>${q.b.icon} ${q.b.label}：<b>${q.b.disp}</b></span></div>
+<p class="quizNote">${q.note}</p>
+<button class="btn" id="quizNext">${quizIdx+1<quizData.length?'次の問題へ':'結果を見る'}</button>`;
+   $('#quizNext').onclick=()=>{quizIdx++;renderQuiz();};
+  };
+ });
+}
+const quizHomeBtn=document.querySelector('[data-go="quiz"]');
+if(quizHomeBtn){quizHomeBtn.onclick=()=>{quizIdx=0;quizScore=0;go('quiz');renderQuiz();};}
+renderQuiz();
 
 </script>
 </body></html>

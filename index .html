@@ -1,0 +1,1520 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>カリウム探偵</title>
+<style>
+:root{--bg:#f4f8f6;--card:#fff;--ink:#16302d;--sub:#5f716e;--main:#098776;--main2:#066b60;--line:#d9e7e3;--red:#d43d3d;--orange:#d78916;--green:#16875b;--blue:#3b78d8;--shadow:0 8px 24px rgba(10,80,70,.12);--r:20px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP","Yu Gothic",Meiryo,sans-serif;font-size:18px;line-height:1.65}
+.wrap{max-width:620px;margin:0 auto;padding:0 16px 60px}
+header{position:sticky;top:0;z-index:10;background:linear-gradient(135deg,var(--main),var(--main2));color:#fff;padding:14px 16px calc(14px + env(safe-area-inset-top));box-shadow:0 4px 16px rgba(0,0,0,.14)}
+.head{max-width:620px;margin:auto;display:flex;align-items:center;gap:10px}
+.back{display:none;border:0;background:rgba(255,255,255,.22);color:#fff;border-radius:13px;padding:9px 12px;font-weight:800;font-size:15px}
+.back.show{display:block}
+.title{font-size:22px;font-weight:900;display:flex;align-items:center;gap:8px}
+.subtitle{font-size:12px;opacity:.9}
+.modebadge{margin-left:auto;font-size:12px;font-weight:800;background:rgba(255,255,255,.22);border-radius:999px;padding:5px 11px;white-space:nowrap}
+.screen{display:none}.screen.on{display:block}
+.hero{background:#fff;margin:18px 0;padding:24px 18px;border-radius:24px;box-shadow:var(--shadow);text-align:center;border:1px solid var(--line)}
+.hero .ic{font-size:48px}.hero h1{font-size:30px;margin:4px 0 6px;line-height:1.25}.hero p{margin:0;color:var(--sub);font-size:16px}.homeMeter{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}.homeMeter .knum{font-size:58px}.homeMeter .verdict{margin-bottom:4px}.homeMeter .quickStart{margin-top:14px}
+.kInputPrompt{margin:2px 0 2px;font-size:14px;font-weight:900;color:var(--main2)}
+.vneutral{background:#f5f7f7;border-color:#aebfbb;color:#536460}
+.homeMainCta:disabled{background:#b8c6c3!important;color:#fff!important;box-shadow:none!important;cursor:not-allowed;opacity:.9}
+.homeMainCta:disabled:before{content:"K値を入力";background:#e4e9e7;color:#536460;box-shadow:none;animation:none}
+.slider.kunset::-webkit-slider-thumb{border-color:#91a6a1;box-shadow:0 3px 10px rgba(0,0,0,.16)}
+.slider.kunset::-moz-range-thumb{border-color:#91a6a1}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px;margin:16px 0;box-shadow:var(--shadow)}
+h2{font-size:23px;margin:0 0 8px}h3{font-size:19px;margin:18px 0 8px}
+.lead{color:var(--sub);font-size:15px;margin:0 0 14px}
+.increaseEm{color:var(--red);font-weight:1000;font-size:1.08em}
+.btn{width:100%;border:0;border-radius:17px;padding:17px 14px;margin-top:12px;font-size:19px;font-weight:900;background:var(--main);color:#fff;box-shadow:0 8px 16px rgba(9,135,118,.25)}
+.btn.sec{background:#fff;color:var(--main2);border:2px solid var(--main);box-shadow:none}
+.btn.soft{background:#e8f6f3;color:var(--main2);box-shadow:none}
+.menu{display:grid;gap:13px;margin-top:16px}
+.menu button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:18px;box-shadow:var(--shadow);display:flex;gap:14px;align-items:center;text-align:left;font:inherit;color:inherit}
+.mi{width:54px;height:54px;border-radius:16px;background:#e8f6f3;display:grid;place-items:center;font-size:30px;flex:0 0 54px}
+.mt{flex:1;min-width:0}.mt b{display:block;font-size:19px}.mt span{font-size:13px;color:var(--sub)}
+.menuArrow{margin-left:auto;flex:0 0 auto;align-self:center;font-size:13px;font-weight:900;color:var(--main2);background:#e8f6f3;border-radius:999px;padding:5px 9px;white-space:nowrap}
+.homeCookText{flex:1;min-width:0}
+/* mode toggle */
+.modecard{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--shadow);margin:16px 0}
+.modecard .q{font-weight:900;font-size:16px;margin-bottom:10px;text-align:center}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg button{border:2px solid var(--line);background:#fff;border-radius:16px;padding:14px 8px;font:inherit;color:var(--ink);text-align:center}
+.seg button b{display:block;font-size:18px;font-weight:900}
+.seg button small{display:block;font-size:11px;color:var(--sub);margin-top:2px}
+.seg button.sel{border-color:var(--main);background:#e8f6f3;box-shadow:inset 0 0 0 2px rgba(9,135,118,.12)}
+.kbox{text-align:center}
+.knum{font-size:54px;font-weight:1000;letter-spacing:-1px}.unit{font-size:17px;color:var(--sub)}
+.barwrap{position:relative;margin-top:8px;padding-top:28px}
+.bestline{position:absolute;left:52.6%;top:32px;bottom:2px;width:0;border-left:4px solid #19a55b;transform:translateX(-50%);pointer-events:none;z-index:2;opacity:.95}
+.bestline:before{content:"ベスト 5.0";position:absolute;left:50%;transform:translateX(-50%);top:-24px;background:#19a55b;color:#fff;border-radius:999px;padding:2px 8px;font-size:11px;font-weight:900;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+.targetband{position:absolute;left:26.3%;width:34.2%;top:0;text-align:center;background:#0b8f70;color:#fff;border-radius:999px;padding:4px 8px;font-size:13px;font-weight:900;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.16);pointer-events:none}
+.targetband:after{content:"";position:absolute;left:66.7%;top:100%;transform:translateX(-50%);border-left:6px solid transparent;border-right:6px solid transparent;border-top:7px solid #0b8f70}
+.morebox{border:2px solid var(--line);border-radius:18px;margin:16px 0;background:#fff;overflow:hidden}
+.morebox summary{list-style:none;cursor:pointer;padding:16px 18px;font-weight:1000;font-size:18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.morebox summary::-webkit-details-marker{display:none}
+.morebox summary:after{content:"＋ 詳しく見る";font-size:13px;color:var(--main2);background:#e8f6f3;border-radius:999px;padding:5px 9px;white-space:nowrap}
+.morebox[open] summary:after{content:"− とじる"}
+.morecontent{padding:0 14px 15px}
+.morebox.drinkmore{border-color:#a8d8e8;background:#f4fbff}
+.morebox.fruitmore{border-color:#efb8d3;background:#fff7fb}
+.slider{width:100%;height:52px;appearance:none;background:linear-gradient(90deg,
+  #a9cffd 0 26.3%,
+  #8cdfb4 26.3% 60.5%,
+  #ffe083 60.5% 91.8%,
+  #ff6b5f 91.8% 100%);border-radius:26px;border:3px solid #fff;box-shadow:inset 0 0 0 1px #cddbd8,0 3px 10px rgba(0,0,0,.10)}
+.slider::-webkit-slider-thumb{appearance:none;width:48px;height:48px;border-radius:50%;background:#fff;border:6px solid var(--main);box-shadow:0 3px 12px rgba(0,0,0,.25)}
+.slider::-moz-range-thumb{width:48px;height:48px;border-radius:50%;background:#fff;border:6px solid var(--main)}
+.dragHint{position:absolute;top:28px;left:52.6%;width:52px;height:52px;transform:translateX(-50%);pointer-events:none;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .25s;z-index:1}
+#kslider.kunset~.dragHint{opacity:1}
+.dragHint .ring{position:absolute;width:100%;height:100%;border-radius:50%;background:rgba(9,135,118,.35);animation:dragRing 1.6s ease-out infinite}
+.dragHint .ring2{position:absolute;width:100%;height:100%;border-radius:50%;background:rgba(9,135,118,.35);animation:dragRing 1.6s ease-out infinite;animation-delay:.8s}
+.dragHint .arrows{position:relative;font-size:14px;font-weight:1000;color:#fff;background:var(--main);border-radius:999px;padding:3px 9px;box-shadow:0 3px 8px rgba(0,0,0,.22);animation:dragSway 1.6s ease-in-out infinite;white-space:nowrap}
+@keyframes dragRing{0%{transform:scale(.55);opacity:.75}100%{transform:scale(2.1);opacity:0}}
+@keyframes dragSway{0%,100%{transform:translateX(-11px)}50%{transform:translateX(11px)}}
+.scale{display:flex;justify-content:space-between;font-size:13px;color:var(--sub);margin-top:4px}
+.verdict{margin-top:16px;padding:16px;border-radius:18px;border:3px solid;text-align:center;font-weight:800}
+.vok{background:#eaf8f0;border-color:var(--green);color:#0d6843}
+.vlow{background:#eaf2ff;border-color:var(--blue);color:#2859a0}
+.vmid{background:#fff5dc;border-color:var(--orange);color:#865204}
+.vhi{background:#ffecec;border-color:var(--red);color:#992020}
+.big{display:block;font-size:26px;margin-bottom:2px}
+.steps{display:flex;justify-content:center;gap:7px;margin:16px 0}
+.dot{width:10px;height:10px;border-radius:50%;background:#cbd9d5}.dot.on{width:30px;border-radius:6px;background:var(--main)}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.foodcat{margin:16px 0 6px;font-weight:1000;color:var(--main2);display:flex;align-items:center;gap:6px;font-size:16px}
+.deepbox{background:#fffef8;border:2px solid #efd18c;border-radius:18px;padding:15px;margin:16px 0}
+.deepbox h3{margin:0 0 8px;color:#865204}.deepbox p{margin:6px 0;font-size:15px}.minilead{font-size:13px;color:var(--sub);margin:4px 0 10px}
+.fruitbox{background:#fff7fb;border-color:#efb8d3}
+.fruitbox h3{color:#8a315b}
+.fruitgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.fruitchip{border:2px solid var(--line);background:#fff;border-radius:16px;padding:12px 8px;text-align:left;font:inherit;color:inherit;min-height:86px}
+.fruitchip .top{display:flex;gap:7px;align-items:center;font-weight:900;font-size:15px}.fruitchip .e{font-size:24px}.fruitchip small{display:block;color:var(--sub);font-size:11px;margin-top:3px;line-height:1.35}.fruitchip .kmg{display:inline-block;margin-top:4px;border-radius:999px;padding:2px 8px;font-size:11px;font-weight:900;background:#f3f0ff;color:#583b9b}.fruitchip.sel{border-color:#cc4f8b;background:#fff0f7;box-shadow:inset 0 0 0 2px rgba(204,79,139,.12)}
+.drinkbox{background:#f4fbff;border-color:#a8d8e8}.drinkbox h3{color:#155f78}.drinkgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.drinkchip{border:2px solid var(--line);background:#fff;border-radius:16px;padding:12px 9px;text-align:left;font:inherit;color:inherit;min-height:105px;transition:transform .08s ease,border-color .15s ease}.drinkchip .top{display:flex;gap:7px;align-items:center;font-weight:900;font-size:15px}.drinkchip .e{font-size:24px}.drinkchip small{display:block;color:var(--sub);font-size:11px;margin-top:3px;line-height:1.4}.drinkchip .kmg{display:inline-block;margin-top:5px;border-radius:999px;padding:2px 8px;font-size:11px;font-weight:900;background:#e8f5fa;color:#155f78}
+.drinkchip.high{background:#fff0f0;border-color:#efa4a4}.drinkchip.high .kmg{background:#ffdada;color:#9d2727}
+.drinkchip.caution{background:#fff8e8;border-color:#edcf83}.drinkchip.caution .kmg{background:#ffe9b7;color:#835300}
+.drinkchip.moderate{background:#f6fbf7;border-color:#b8d9c5}.drinkchip.moderate .kmg{background:#e3f3e8;color:#276a45}
+.drinkchip.low{background:#eef9f6;border-color:#abdcca}.drinkchip.low .kmg{background:#dff4ec;color:#11694e}
+.drinkchip.sel{border-color:var(--main)!important;box-shadow:inset 0 0 0 3px rgba(9,135,118,.18),0 3px 10px rgba(9,135,118,.12);transform:translateY(-1px)}
+.drinkguide{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px}.drinkguide div{border-radius:14px;padding:11px;font-size:13px;border:1px solid var(--line);background:#fff}.drinkguide .good{background:#ecfff7;border-color:#9ddfc2}.drinkguide .warn{background:#fff7e6;border-color:#efcf8b}.drinkguide b{display:block;font-size:15px;margin-bottom:2px}
+.tlSection{margin:18px 0}
+.tlHead{font-weight:1000;font-size:15px;border-radius:12px;padding:9px 13px;margin-bottom:9px}
+.tlHead.red{background:#ffecec;color:#992020}
+.tlHead.yellow{background:#fff5dc;color:#865204}
+.tlHead.green{background:#eafff4;color:#0d6843}
+.tlGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.tlItem{border:1.5px solid var(--line);border-radius:14px;padding:11px 13px;font-size:13.5px;background:#fff;box-shadow:0 2px 7px rgba(10,80,70,.06)}
+.tlItem b{display:block;font-size:14.5px;margin-bottom:3px;line-height:1.3}
+.tlItem small{color:var(--sub)}
+@media(max-width:520px){.tlGrid{grid-template-columns:1fr}}
+.quizProgress{font-size:13px;color:var(--sub);font-weight:800;margin-bottom:6px}
+.quizQ{font-size:18px;font-weight:1000;text-align:center;margin:6px 0 14px}
+.quizPair{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+.quizOpt{border:2px solid var(--line);background:#fff;border-radius:18px;padding:18px 10px;text-align:center;font:inherit;color:inherit;box-shadow:0 3px 10px rgba(10,80,70,.08);cursor:pointer;transition:transform .07s ease}
+.quizOpt .qe{font-size:34px;display:block;margin-bottom:6px}
+.quizOpt b{font-size:14.5px;line-height:1.3;display:block}
+.quizOpt:active{transform:scale(.96)}
+.quizOpt.correct{border-color:var(--main);background:#e8f6f3}
+.quizOpt.wrong{border-color:#e0655e;background:#fff0ee;opacity:.75}
+.quizVs{font-weight:1000;color:var(--sub);font-size:13px}
+.quizResult{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
+.quizJudge{font-size:19px;font-weight:1000;text-align:center;margin-bottom:8px}
+.quizJudge.ok{color:var(--main2)}
+.quizJudge.ng{color:#992020}
+.quizNums{display:flex;flex-direction:column;gap:4px;font-size:13.5px;background:#f6faf9;border-radius:12px;padding:10px 12px;margin-bottom:10px}
+.quizNums b{color:var(--main2)}
+.quizNote{font-size:14px;color:var(--ink);margin:0 0 14px;line-height:1.55}
+@media(max-width:420px){.quizOpt .qe{font-size:28px}.quizOpt b{font-size:13px}}
+@media(max-width:520px){.drinkguide{grid-template-columns:1fr}}
+@media(max-width:380px){.drinkgrid{grid-template-columns:1fr}}
+@media(max-width:380px){.fruitgrid{grid-template-columns:1fr}}
+.chip{border:2px solid var(--line);background:#fff;border-radius:18px;padding:15px 10px;text-align:center;font:inherit;color:inherit;min-height:92px;box-shadow:0 3px 10px rgba(10,80,70,.08);cursor:pointer;transition:transform .07s ease,box-shadow .07s ease}
+.chip:active{transform:scale(.96);box-shadow:0 1px 4px rgba(10,80,70,.12)}
+.chip .e{font-size:31px;display:block}.chip b{font-size:15px;line-height:1.3}.chip small{display:block;color:var(--sub);font-size:11px;margin-top:2px}
+.chip.sel{border-color:var(--main);background:#e8f6f3;box-shadow:inset 0 0 0 2px rgba(9,135,118,.12)}
+.wide{grid-column:1/-1}
+.info{background:#f5fbfa;border:1px solid #cce7e1;border-radius:16px;padding:14px;margin:14px 0;font-size:15px}.info b{color:var(--main2)}
+.dailyKGuide{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(135deg,#eef9f6,#fff);border:2px solid #9fd8ca;border-radius:18px;padding:14px 15px;margin:14px 0 18px}.dailyKGuide .pin{font-size:25px;line-height:1.2;flex:0 0 auto}.dailyKGuide .txt{min-width:0}.dailyKGuide .ttl{display:block;color:var(--main2);font-size:15px;font-weight:1000;margin-bottom:2px}.dailyKGuide .amount{display:block;font-size:24px;font-weight:1000;line-height:1.25;color:var(--ink)}.dailyKGuide .amount em{font-style:normal;color:var(--main2)}.dailyKGuide small{display:block;color:var(--sub);font-size:12px;line-height:1.55;margin-top:4px}
+/* potassium daily budget */
+.kBudgetCard{background:linear-gradient(135deg,#eef9f6,#fff);border:2px solid #83cdbd;border-radius:20px;padding:16px;margin:14px 0 20px;box-shadow:0 6px 16px rgba(9,135,118,.09)}
+.kBudgetHead{display:flex;gap:11px;align-items:flex-start}.kBudgetHead .icon{font-size:29px;line-height:1.15;flex:0 0 auto}.kBudgetHead b{display:block;color:var(--main2);font-size:18px;line-height:1.35}.kBudgetHead span{display:block;color:var(--sub);font-size:12px;margin-top:3px;line-height:1.5}
+.kBudgetFlow{display:grid;grid-template-columns:1fr 34px 1fr;gap:8px;align-items:stretch;margin:14px 0 10px}.kBudgetPart{border-radius:16px;padding:12px 10px;text-align:center;border:1px solid var(--line);background:#fff}.kBudgetPart.base{border-color:#9fd8ca;background:#f7fffc}.kBudgetPart.extra{border-color:#efc16d;background:#fff9ea}.kBudgetPart span{display:block;font-size:13px;font-weight:900}.kBudgetPart strong{display:block;font-size:20px;line-height:1.25;margin:3px 0}.kBudgetPart small{display:block;color:var(--sub);font-size:10px;line-height:1.4}.kBudgetPlus{display:grid;place-items:center;font-size:27px;font-weight:1000;color:#d78916}
+.kBudgetMsg{background:#0b8f70;color:#fff;border-radius:14px;padding:11px 12px;text-align:center;font-size:15px;font-weight:900;line-height:1.5}
+.kBudgetDetails{margin-top:12px;border:1px solid #b9ddd6;border-radius:15px;background:#fff;overflow:hidden}.kBudgetDetails summary{list-style:none;cursor:pointer;padding:13px 14px;font-size:14px;font-weight:1000;color:var(--main2);display:flex;justify-content:space-between;align-items:center;gap:8px}.kBudgetDetails summary::-webkit-details-marker{display:none}.kBudgetDetails summary:after{content:"＋ 開く";font-size:11px;background:#e8f6f3;border-radius:999px;padding:4px 8px;white-space:nowrap}.kBudgetDetails[open] summary:after{content:"− とじる"}.kBudgetBody{padding:0 13px 14px}
+.kMealTitle{font-size:15px;font-weight:1000;margin:4px 0 8px;color:var(--ink)}.kMealRows{display:grid;gap:6px}.kMealRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border-radius:11px;background:#f7faf9;padding:8px 10px;font-size:13px}.kMealRow b{font-size:14px}.kMealRow.total{background:#e8f6f3;border:1px solid #9fd8ca;font-weight:1000}.kMealNote{font-size:11px;color:var(--sub);line-height:1.55;margin:7px 2px 12px}
+.kMisoBox{background:#fff8e8;border:1px solid #edcf83;border-radius:14px;padding:11px;margin:10px 0}.kMisoBox b{display:block;color:#7a4d00;font-size:15px;margin-bottom:4px}.kMisoBox div{font-size:12px;line-height:1.65}.kMisoTip{margin-top:6px;color:#805200;font-weight:900}
+.kExtraTitle{font-size:15px;font-weight:1000;margin:13px 0 8px;color:#8a315b}.kExtraGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.kExtraItem{border:1px solid #efb8d3;background:#fff8fb;border-radius:12px;padding:9px;font-size:12px;line-height:1.4}.kExtraItem b{display:block;font-size:14px;color:#8a315b}.kExtraItem.wide{grid-column:1/-1}
+.kBudgetCaution{margin-top:11px;background:#fff0ee;border:1px solid #e9a49d;border-radius:13px;padding:10px;font-size:12px;line-height:1.55;color:#852b24}.kBudgetCaution b{color:#98251d}.kBudgetSource{font-size:10px;color:var(--sub);line-height:1.45;margin-top:9px}
+@media(max-width:430px){.kBudgetFlow{grid-template-columns:1fr}.kBudgetPlus{height:24px}.kExtraGrid{grid-template-columns:1fr}.kExtraItem.wide{grid-column:auto}}
+
+
+/* boiling / soaking guide */
+.cookLearnTrigger{position:relative;background:linear-gradient(135deg,#fff0c7,#fffaf0)!important;border:3px solid #e49414!important;color:#6f4300!important;box-shadow:0 8px 18px rgba(215,137,22,.22)!important;min-height:108px}
+.cookLearnTrigger:before{content:"重要";position:absolute;top:8px;right:10px;background:#d96d00;color:#fff;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:1000;letter-spacing:.04em}
+.cookLearnTrigger .hint{background:#d96d00!important;color:#fff!important;font-size:12px!important;padding:4px 10px!important}
+.cookLearnTrigger.active{background:linear-gradient(135deg,#e9fff4,#fff)!important;border-color:var(--main)!important;color:var(--ink)!important}
+.cookLearnTrigger.active:before{content:"確認済";background:var(--main)}
+.cookInline{border-color:#e6a539!important;background:#fffaf0!important}
+.cookHero{background:#fff2cf;border:2px solid #e9b458;border-radius:16px;padding:14px;margin:8px 0 14px;color:#704700;font-size:15px}
+.cookHero b{font-size:18px;color:#7c4d00}
+.cookCompare{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0}
+.cookCard{border-radius:15px;padding:12px 10px;border:2px solid var(--line);background:#fff;font-size:13px;line-height:1.5}
+.cookCard b{display:block;font-size:16px;margin-bottom:4px}.cookCard .mark{display:block;font-size:27px;line-height:1;margin-bottom:5px}
+.cookCard.best{background:#edfff6;border-color:#8fd9b9}.cookCard.best b{color:#0b6d49}
+.cookCard.mid{background:#fff8e8;border-color:#edcf83}.cookCard.mid b{color:#805200}
+.cookCard.bad{background:#fff1ef;border-color:#e9aaa5}.cookCard.bad b{color:#98251d}
+.cookChoiceTitle{font-weight:1000;font-size:17px;color:#754900;margin:16px 0 8px}
+.cookChoice{min-height:98px}.cookChoice small{line-height:1.45}
+.cookChoice.soak{background:#fff8e8;border-color:#edcf83}.cookChoice.soak.sel{background:#fff0c7;border-color:#d98a17}
+.cookChoice.boiled{background:#edfff6;border-color:#9de0c2}.cookChoice.boiled.sel{background:#dff8eb;border-color:#16875b}
+.cookChoice.microwave{background:#fff2f0;border-color:#efb0aa}.cookChoice.microwave.sel{background:#ffe1dd;border-color:#d43d3d}
+.cookSteps{display:grid;gap:8px;margin:14px 0}
+.cookStep{display:grid;grid-template-columns:34px 1fr;gap:9px;align-items:start;background:#fff;border:1px solid #ead7ad;border-radius:14px;padding:11px}
+.cookStep .num{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;background:#d78916;color:#fff;font-weight:1000}
+.cookPotato{background:#fff0ee;border:2px solid #e0655e;border-radius:17px;padding:14px;margin:14px 0;color:#8f281f;font-size:14px;line-height:1.6}
+.cookPotato b{color:#98251d;font-size:16px}
+.cookNote{background:#f5fbfa;border:1px solid #bde2d9;border-radius:14px;padding:12px;font-size:12px;color:var(--sub);line-height:1.55}
+@media(max-width:520px){.cookCompare{grid-template-columns:1fr}}
+.constip{background:#fff9ed;border:2px solid #f0cf8a;border-radius:18px;padding:16px;margin:14px 0}
+.flow{display:grid;gap:8px;text-align:center;font-weight:900}.flow div{background:#fff;border:1px solid #ead7ad;border-radius:14px;padding:10px}
+.rank{display:flex;gap:12px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:18px;margin:10px 0;background:#fff}
+.badge{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:1000;font-size:20px;flex:0 0 46px}
+.b1{background:var(--red)}.b2{background:var(--orange)}.b3{background:var(--main)}
+.stars{color:#d98a17;font-size:14px}
+.action{background:linear-gradient(135deg,#e6f7f3,#fff);border:2px solid #bde2d9;border-radius:20px;padding:16px}
+.action label{display:block;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;margin:8px 0}
+.memo,textarea,input[type=text],input[type=date]{width:100%;border:2px solid var(--line);border-radius:16px;padding:12px;font:inherit;font-size:16px;background:#fff}
+.sheet{border:2px solid var(--main);border-radius:20px;padding:18px;background:#fff}.sheet h2{text-align:center;color:var(--main2)}
+.saveImageBtn{background:#fff!important;color:var(--main2)!important;border:2px solid var(--main)!important;box-shadow:none!important}
+.saveImageBtn:disabled{opacity:.65;cursor:wait}
+@media print{#printReportBtn,#saveReportImageBtn{display:none!important}}
+.note{font-size:12px;color:var(--sub);text-align:center;margin:20px 4px}
+/* trend */
+.trow{display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center;margin:10px 0}
+.tdate{font-size:13px;color:var(--sub);text-align:right;font-weight:700}
+.tbar{background:#eef4f2;border-radius:10px;height:30px;position:relative;overflow:hidden}
+.tfill{height:100%;border-radius:10px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-weight:900;font-size:14px;min-width:42px;transition:width .4s}
+.tmeta{font-size:13px;font-weight:800;text-align:right;min-width:56px}
+.up{color:var(--red)}.down{color:var(--green)}.flat{color:var(--sub)}
+.win{background:#eaf8f0;border:2px solid var(--green);color:#0d6843;border-radius:18px;padding:16px;text-align:center;font-weight:800;margin:12px 0}
+.warn{background:#fff5dc;border:2px solid var(--orange);color:#865204;border-radius:18px;padding:16px;text-align:center;font-weight:800;margin:12px 0}
+.addrec{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:end}
+.empty{text-align:center;color:var(--sub);padding:24px 8px}
+.modal{position:fixed;inset:0;background:rgba(0,30,25,.5);display:none;align-items:flex-end;z-index:50}.modal.on{display:flex}
+.modalIn{background:#fff;width:100%;max-width:620px;margin:auto;border-radius:24px 24px 0 0;padding:22px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -8px 25px rgba(0,0,0,.18)}.modalIn h2{color:var(--main2)}
+
+/* dialysis timing guide */
+.timingHero{background:linear-gradient(135deg,#fff7e5,#fff);border:2px solid #f2ce7a;border-radius:22px;padding:18px;margin:16px 0;box-shadow:var(--shadow)}
+.timingHero h2{display:flex;align-items:center;gap:8px;color:#7a4d00}
+.timingHero .key{font-size:26px;font-weight:1000;color:#d96d00}
+.scheduleSwitch{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.scheduleSwitch button{border:2px solid #ecd49a;background:#fff;border-radius:16px;padding:12px 8px;font:inherit;font-weight:900;color:#7a4d00}
+.scheduleSwitch button.sel{background:#fff1ca;border-color:#d98a17;box-shadow:inset 0 0 0 2px rgba(217,138,23,.14)}
+.weekline{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin:16px 0 8px}
+.daybox{border:2px solid var(--line);border-radius:16px;background:#fff;padding:10px 4px;text-align:center;min-height:116px;position:relative;overflow:hidden}
+.daybox .d{font-weight:1000;font-size:18px}.daybox .sub{font-size:11px;color:var(--sub);line-height:1.25;margin-top:2px}.daybox .fruit{font-size:25px;margin-top:5px}.daybox.good{border-color:#32aa83;background:#eafff4}.daybox.caution{border-color:#e7a439;background:#fff5dc}.daybox.danger{border-color:#e0655e;background:#fff0ee}.daybox.hd{box-shadow:inset 0 5px 0 #098776}.daybox .badge2{display:inline-block;margin-top:4px;border-radius:999px;padding:2px 6px;font-size:10px;font-weight:900}.good .badge2{background:#c8f5df;color:#0b6d49}.caution .badge2{background:#ffe6a8;color:#805200}.danger .badge2{background:#ffd0cc;color:#98251d}
+.timingLegend{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.timingLegend .lg{border-radius:16px;padding:12px;border:1px solid var(--line);background:#fff;font-size:14px}.lg b{font-size:16px}.lg.good{border-color:#9de0c2;background:#edfff6}.lg.caution{border-color:#edcf83;background:#fff8e8}.lg.danger{border-color:#f2aaa5;background:#fff3f1}
+.daybox .daysplit{display:flex;flex-direction:column;gap:3px;margin-top:5px}
+.daysplit .half{border-radius:9px;padding:4px 1px;line-height:1.15}
+.daysplit .half .ha{font-size:15px;display:block}
+.daysplit .half b{font-size:11px;font-weight:1000}
+.daysplit .half small{display:block;font-size:9px;margin-top:1px}
+.daysplit .half.before{background:#fff0ee;border:1px solid #e6a8a2;color:#98251d}
+.daysplit .half.after{background:#e9fff4;border:1px solid #8fd9b9;color:#0b6d49}
+.daysplit .half.after.warnafter{background:#fff8e8;border-color:#edcf83;color:#805200}
+.riskFlow{display:grid;grid-template-columns:1fr;gap:8px;margin:14px 0}.riskFlow div{border-radius:16px;padding:12px;text-align:center;font-weight:900;background:#fff;border:1px solid #efd18c}.riskFlow .bad{background:#fff0ee;border-color:#e0655e;color:#98251d}.riskFlow .ok{background:#eafff4;border-color:#32aa83;color:#0b6d49}.arrowDown{text-align:center;font-size:24px;line-height:1;margin:-2px 0;color:#d98a17}
+.fruitTimingNote{background:#f5fbfa;border:2px solid #bde2d9;border-radius:18px;padding:14px;margin:12px 0;font-size:15px}.fruitTimingNote b{color:var(--main2)}
+@media(max-width:520px){.weekline{grid-template-columns:repeat(7,minmax(58px,1fr));overflow-x:auto;padding-bottom:4px}.daybox{min-width:58px}.daybox .d{font-size:16px}.daybox .fruit{font-size:22px}.daybox .sub{font-size:10px}.timingLegend{grid-template-columns:1fr}}
+
+
+/* round-use UX */
+.quickStart{margin-top:16px;background:linear-gradient(135deg,#ff6a45,#e8491d);font-size:21px;padding:18px;border-radius:18px;color:#fff}
+.homeMainCta{position:relative;padding:20px 18px 20px 18px!important;font-size:24px!important;box-shadow:0 12px 24px rgba(216,60,20,.32)!important;border:2px solid rgba(255,255,255,.35)}
+.homeMainCta:before{content:"まずここ";position:absolute;top:-14px;left:14px;background:#ffd54f;color:#5c3b00;border:2px solid #fff;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:1000;box-shadow:0 5px 12px rgba(120,82,0,.28);letter-spacing:.03em;animation:firstBadgePulse 1.8s ease-in-out infinite}
+@keyframes firstBadgePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.homeSubhead{margin:18px 2px 8px;color:var(--sub);font-size:13px;font-weight:900;letter-spacing:.03em}
+.secondaryMenu{margin-top:0}
+.menu button.homeSub{background:#fff;border:1px solid #dfe9e5;box-shadow:0 4px 10px rgba(10,80,70,.06);padding:16px}
+.menu button.homeSub .mi{background:#edf4f2;width:50px;height:50px;font-size:27px}
+.menu button.homeSub .mt b{font-size:18px}
+.menu button.homeSub .mt span{font-size:13px}
+.sectionCue{margin:18px 0 10px;padding:13px 15px;border-radius:16px;font-weight:1000;font-size:18px;border-left:7px solid var(--main);background:#edf9f6}
+.sectionCue.how{border-left-color:#d78916;background:#fff8e9;color:#754900;margin-top:24px}
+.sectionCue small{display:block;font-size:12px;font-weight:600;color:var(--sub);margin-top:2px}
+.detailTrigger{border:2px dashed #6dbfab!important;background:#f2fbf8!important;position:relative;padding-top:30px!important}
+.detailTrigger:before{content:"タップ";position:absolute;top:10px;right:12px;font-size:10px;font-weight:1000;color:#fff;background:var(--main);border-radius:999px;padding:3px 9px;letter-spacing:.04em;box-shadow:0 2px 6px rgba(9,135,118,.3)}
+.detailTrigger .hint{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:10px;padding:10px 12px;border-radius:14px;background:var(--main);color:#fff;font-size:14px;font-weight:900;box-shadow:0 4px 10px rgba(9,135,118,.28)}
+.detailTrigger .hint:before{content:"👆"}
+.detailTrigger .hint:after{content:"›";font-size:19px;font-weight:1000;line-height:.8}
+.detailTrigger.active{border-style:solid!important;border-color:var(--main)!important;background:#e8f6f3!important}
+.detailTrigger.active:before{content:"選択中";background:#066b60}
+.detailTrigger .selectedMini{display:none;margin-top:10px;padding:8px 12px;border-radius:14px;background:var(--main);color:#fff;font-size:14px;font-weight:900;box-shadow:0 4px 10px rgba(9,135,118,.28)}
+.detailTrigger.active .selectedMini{display:flex;align-items:center;justify-content:center;gap:5px}
+.detailTrigger.active .selectedMini:before{content:"👆"}
+.detailTrigger.active .selectedMini:after{content:"›";font-size:19px;font-weight:1000;line-height:.8}
+.detailTrigger.active .hint{display:none}
+.inlineDetail{display:none;grid-column:1/-1;border:2px solid #b9ddd6;border-radius:18px;background:#f9fffd;padding:14px;margin-top:2px;text-align:left;animation:fadeIn .18s ease}
+.inlineDetail.open{display:block}.inlineDetail.fruitInline{border-color:#efb8d3;background:#fff7fb}.inlineDetail.drinkInline{border-color:#a9d3df;background:#f4fbfd}
+.inlineHead{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;margin-bottom:8px}.inlineHead h3{margin:0;font-size:18px}.inlineHead p{margin:2px 0 0;font-size:12px;color:var(--sub)}
+.inlineClose{border:0;border-radius:12px;background:#edf3f1;color:var(--ink);font-weight:900;padding:9px 11px;font-size:13px;white-space:nowrap}
+.inlineDone{width:100%;border:0;border-radius:14px;background:var(--main);color:#fff;padding:13px;font:inherit;font-size:16px;font-weight:900;margin-top:12px}
+@keyframes fadeIn{from{opacity:.4;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+.selectionSummary{position:static;background:#edf8f5;color:var(--ink);border:2px solid #b9ddd6;border-radius:17px;padding:12px 14px;margin:18px 0 10px;box-shadow:none;display:none;align-items:center;gap:10px}
+.selectionSummary.show{display:flex}.selectionSummary.detail-open{display:none!important}.selectionSummary .selectionText{min-width:0;flex:1}.selectionSummary b{display:block;font-size:15px;color:var(--main2)}.selectionSummary span{display:block;font-size:12px;color:var(--sub);white-space:normal;overflow:visible}.selectionSummary button{display:none}
+.roundPanel{background:linear-gradient(135deg,#f0fbf8,#fff);border:2px solid #9fd8ca;border-radius:20px;padding:16px;margin:16px 0}
+.roundPanel h3{margin:0 0 8px;color:var(--main2)}
+.roundRow{display:grid;grid-template-columns:36px 1fr;gap:9px;align-items:start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px;margin:8px 0}.roundRow .num{width:30px;height:30px;border-radius:50%;background:var(--main);color:#fff;display:grid;place-items:center;font-weight:1000}
+.categoryBlock{margin-bottom:18px;padding-bottom:4px;border-bottom:1px solid #edf2f0}
+
+.fruitHabit{margin-top:16px;padding:15px;border:2px solid #e9b458;border-radius:18px;background:#fffaf0}.fruitHabit h3{margin:0 0 6px;color:#8a5700}.fruitHabit p{margin:0 0 12px;font-size:15px}.fruitRule{margin-top:10px;padding:12px;border-radius:14px;background:#fff1c9;color:#765000;font-size:14px;line-height:1.55}.fruitHabit .chip.sel{border-color:#d98a17;background:#fff0c7;box-shadow:inset 0 0 0 2px rgba(217,138,23,.12)}
+.itemFreqRow{margin:10px 0;padding:11px 12px;border:1.5px solid #ecd49a;border-radius:14px;background:#fff}.itemFreqRow b{display:block;font-size:15px;margin-bottom:7px}.itemFreqRow .chips{grid-template-columns:repeat(3,1fr);gap:6px}.chip.small{min-height:auto;padding:9px 4px;box-shadow:none}.chip.small .e{font-size:19px}.chip.small b{font-size:11.5px;line-height:1.25}.chip.small.sel{border-color:#d98a17;background:#fff0c7}
+.inlineDetail.vegInline{border-color:#9fd8ca;background:#f7fffb}.vegInline .fruitchip .kmg{background:#f3f0ff;color:#583b9b}.vegInline .fruitchip.sel{border-color:var(--main);background:#eafff4;box-shadow:inset 0 0 0 2px rgba(11,148,127,.12)}.vegGuide{margin:14px 0 2px;padding:13px;border:2px solid #9fd8ca;border-radius:16px;background:#effbf7;color:#155f51;font-size:14px;line-height:1.6}.vegGuide b{color:#075f52}
+
+.twoDayAlert{background:#fff0ee;border:2px solid #e0655e;border-radius:18px;padding:14px;margin:12px 0;color:#8f281f;font-size:15px}.twoDayAlert b{color:#98251d}.twoDayAlert .bigline{display:block;font-size:20px;font-weight:1000;margin-bottom:4px}
+
+/* vegetable / fruit juice deep-dive */
+.inlineDetail.juiceInline{border-color:#efaaa7;background:#fffafa}
+.juiceAlert{background:#fff0ee;border:2px solid #e0655e;border-radius:18px;padding:14px;margin:14px 0;color:#8f281f;font-size:14px}
+.juiceAlert .bigline{display:block;font-size:19px;font-weight:1000;margin-bottom:5px;color:#98251d}
+.juiceCompare{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-top:10px;text-align:center}
+.juiceCompare .box{background:#fff;border:1px solid #efb4b0;border-radius:13px;padding:9px 6px;font-weight:900;line-height:1.35}
+.juiceCompare .eq{font-size:23px;font-weight:1000}
+.juiceRule{background:#fff8e8;border:2px solid #edcf83;border-radius:16px;padding:13px;margin:12px 0;color:#765000;font-size:14px}
+.seasoningAlert{background:#fff0ee;border:2px solid #e0655e;border-radius:16px;padding:13px;margin:10px 0 13px;color:#8f281f;font-size:14px;line-height:1.6}.seasoningAlert b{color:#98251d}
+.juiceSwap{background:#eafff4;border:2px solid #9ddfc2;border-radius:16px;padding:13px;margin:12px 0;color:#0b6d49;font-weight:900;font-size:14px}
+.juiceInline .sectionMini{font-size:16px;margin:16px 0 7px;color:#7f2722}
+.juiceInline .chip.sel{border-color:#d95d55;background:#fff0ee;box-shadow:inset 0 0 0 2px rgba(217,93,85,.12)}
+@media(max-width:420px){.juiceCompare{grid-template-columns:1fr}.juiceCompare .eq{line-height:1}}
+@media(max-width:380px){.chips{grid-template-columns:1fr}.wide{grid-column:auto}.knum{font-size:48px}}
+
+.homeCookBtn{width:100%;border:0;border-radius:20px;padding:18px 16px;background:linear-gradient(135deg,#fff0c7,#fffaf0);border:3px solid #e49414;color:#6f4300;box-shadow:0 8px 18px rgba(215,137,22,.22);display:flex;gap:14px;align-items:center;text-align:left;font:inherit;position:relative;margin-top:14px}
+.homeCookBtn.homeSub{width:100%;background:#fff;border:1px solid #dfe9e5;color:var(--ink);box-shadow:0 4px 10px rgba(10,80,70,.06);padding:16px;margin-top:0}
+.homeCookBtn:before{content:"おすすめ";position:absolute;top:10px;right:12px;background:#d96d00;color:#fff;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:1000;letter-spacing:.04em}
+.homeCookBtn.homeSub:before{display:none}
+.homeCookBtn .mi2{width:54px;height:54px;border-radius:16px;background:#fff3db;display:grid;place-items:center;font-size:30px;flex:0 0 54px}
+.homeCookBtn.homeSub .mi2{width:50px;height:50px;background:#f7efe0;font-size:27px}
+.homeCookBtn b{display:block;font-size:21px;line-height:1.25;margin-bottom:3px}
+.homeCookBtn.homeSub b{font-size:18px}
+.homeCookBtn span{display:block;font-size:14px;color:#7a5a2b;line-height:1.45}
+.homeCookBtn.homeSub span{font-size:13px;color:var(--sub)}
+.homeCookBtn .hint2{display:inline-block;margin-top:8px;padding:4px 10px;border-radius:999px;background:#d96d00;color:#fff;font-size:12px;font-weight:900}
+.homeCookBtn.homeSub .hint2{background:#eef4f2;color:var(--main2)}
+
+.cookFoodType{margin:16px 0;padding:14px;border:2px solid #e8c56f;border-radius:17px;background:#fffdf6}
+.cookFoodType h3{margin:0 0 5px;color:#7a4d00}
+.cookFoodType p{margin:0 0 10px;font-size:13px;color:var(--sub)}
+.cookTypeGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.cookTypeBtn{border:2px solid var(--line);background:#fff;border-radius:15px;padding:12px 9px;text-align:left;font:inherit;color:inherit}
+.cookTypeBtn b{display:block;font-size:15px}.cookTypeBtn small{display:block;font-size:11px;color:var(--sub);line-height:1.4;margin-top:3px}
+.cookTypeBtn.sel{border-color:#d98a17;background:#fff2cc;box-shadow:inset 0 0 0 2px rgba(217,138,23,.12)}
+.cookTypeAdvice{display:none;margin-top:10px;padding:12px;border-radius:14px;font-size:14px;line-height:1.6}
+.cookTypeAdvice.show{display:block}.cookTypeAdvice.leaf{background:#effbf5;border:1px solid #a9dcc4}.cookTypeAdvice.dense{background:#fff0ee;border:1px solid #e9a39d;color:#7d2c24}
+.cookAnalogy{margin:12px 0;padding:12px 14px;border-radius:15px;background:#f4f8ff;border:1px solid #bfd0ea;font-size:14px;line-height:1.6}
+.cookTrapList{display:grid;gap:8px;margin:12px 0}.cookTrap{padding:11px 12px;border-radius:14px;background:#fff7e8;border:1px solid #eccd86;font-size:14px;line-height:1.55}.cookTrap b{color:#7a4d00}
+@media(max-width:380px){.cookTypeGrid{grid-template-columns:1fr}}
+
+.cocoaCupBox{margin-top:14px;padding:15px;border:2px solid #c9a46a;border-radius:18px;background:#fffaf1}
+.cocoaCupBox h3{margin:0 0 5px;color:#6f4300}
+.cocoaCupGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+.cocoaCup{background:#fff;border:1px solid #e5d2b1;border-radius:14px;padding:11px;font-size:13px;line-height:1.45}
+.cocoaCup b{display:block;font-size:15px;color:#6f4300;margin-bottom:3px}
+.cocoaCup strong{display:block;font-size:18px;color:#992020;margin-top:4px}
+.cocoaClinical{margin-top:10px;padding:11px;border-radius:14px;background:#fff0e8;border:1px solid #efb79c;font-size:13px;line-height:1.55}
+@media(max-width:420px){.cocoaCupGrid{grid-template-columns:1fr}}
+@media print{header,.back,.btn,.note{display:none}.card{box-shadow:none}}
+
+.k2000{color:#d43d3d;font-weight:1000;}
+</style>
+</head>
+<body>
+<header><div class="head"><button id="back" class="back">← もどる</button><div><div class="title">🥬 カリウム探偵</div><div class="subtitle">腎臓病の方の「なぜ上がった？」を一緒に探す</div></div></div></header>
+<div class="wrap">
+
+<!-- HOME -->
+<section id="home" class="screen on">
+<div class="hero">
+  <div class="ic">🕵️‍♂️</div>
+  <h1>今回のカリウムの<br>原因を探そう</h1>
+  <p>まず今回のK値を合わせてから、原因を探します。</p>
+  <div class="homeMeter kbox">
+    <div class="kInputPrompt" id="kInputPrompt">今回の検査結果に合わせて、下の丸を動かしてください</div>
+    <div><span class="knum" id="knum">--.-</span><span class="unit"> mEq/L</span></div>
+    <div class="barwrap">
+      <div class="targetband">目安 4.0〜5.3（中心 5.0）</div>
+      <div class="bestline" aria-hidden="true"></div>
+      <input id="kslider" class="slider kunset" type="range" min="3.0" max="6.8" step="0.1" value="5.0" aria-label="今回のカリウム値" aria-valuetext="未入力">
+      <div class="dragHint" aria-hidden="true"><span class="ring"></span><span class="ring2"></span><span class="arrows">⟷ ドラッグ</span></div>
+    </div>
+    <div class="scale"><span>3.0</span><span>4.0</span><span>5.0</span><span>5.5</span><span>6.0</span><span>6.5</span><span>6.8</span></div>
+    <div id="verdict" class="verdict vneutral"><span class="big">まだ未入力です</span>丸を動かして、今回のK値を合わせてください。</div>
+    <button class="btn quickStart homeMainCta" data-go="detect" disabled>🔎 まずK値を合わせてください</button>
+  </div>
+</div>
+
+<div class="homeSubhead">参考・学びたいときに</div>
+<div class="menu secondaryMenu">
+<button class="homeSub" data-go="why"><div class="mi">💡</div><div class="mt"><b>なんでカリウム、下げるの？</b><span>高いとどうなる？を3分で確認</span></div><span class="menuArrow">＋ 詳しく見る</span></button>
+<button class="homeSub" data-go="signal"><div class="mi">🚦</div><div class="mt"><b>たべもの信号（赤・黄・緑）</b><span>見直したい／注意／選びやすい、を一覧で確認</span></div><span class="menuArrow">＋ 詳しく見る</span></button>
+<button class="homeSub" data-go="quiz"><div class="mi">🕹️</div><div class="mt"><b>くらべるクイズ</b><span>「隠れカリウム」を見ぬくゲーム</span></div><span class="menuArrow">＋ 詳しく見る</span></button>
+<button class="homeSub" data-go="timing"><div class="mi">📅</div><div class="mt"><b>血液透析中の方へ、フルーツ食べるならいつ？</b><span>食べる日とタイミングを確認</span></div><span class="menuArrow">＋ 詳しく見る</span></button>
+</div>
+
+<button id="homeCookBtn" class="homeCookBtn homeSub" type="button">
+  <div class="mi2">💧</div>
+  <div class="homeCookText">
+    <b>知らなきゃ損！カリウムを安全に減らす「ゆでこぼしと水さらし」の極意</b>
+    <span>水にさらすだけでは不十分なことがあります</span>
+  </div>
+  <span class="menuArrow">＋ 詳しく見る</span>
+</button>
+
+<details class="morebox" id="budgetDrawer" style="margin:14px 0 0">
+  <summary><span style="display:flex;align-items:center;gap:12px"><span style="font-size:27px;line-height:1;flex:0 0 auto">📊</span><span><b style="font-size:18px;display:block;line-height:1.3">1日、カリウムはどれくらいまで？</b><span style="font-size:13px;color:var(--sub);display:block;margin-top:2px;font-weight:600">ふだんの食事にプラスできる量の目安</span></span></span></summary>
+  <div class="morecontent">
+    <div class="kBudgetCard" aria-label="1日のカリウムは土台と上乗せで考える" style="margin-top:2px;box-shadow:none">
+      <div class="kBudgetHead">
+        <div class="icon">📊</div>
+        <div>
+          <b>週3回血液透析中の方は、1日<span class="k2000">2,000mg以下</span>がひとつの目安</b>
+          <span>献立によって幅が大きいので、あくまで目安として使ってください。</span>
+        </div>
+      </div>
+
+      <div class="kBudgetFlow">
+        <div class="kBudgetPart base">
+          <span>🍚 低カリウムを意識した3食の一例</span>
+          <strong>約1,400〜1,600mg</strong>
+          <small>ごはん・主菜・副菜・汁物を合わせた一例。肉・魚や野菜の量、加工食品によっては3食だけで2,000mgに達することもあります。</small>
+        </div>
+        <div class="kBudgetPlus">＋</div>
+        <div class="kBudgetPart extra">
+          <span>🍎 見落としやすい上乗せ</span>
+          <strong>約400〜600mg</strong>
+          <small>果物・飲み物・おやつなどが、気づかないうちに積み重なりやすい部分です</small>
+        </div>
+      </div>
+
+      <div class="kBudgetMsg">「残り〇〇mgまでOK」という意味ではありません。まずは、果物・飲み物・おやつなど、何が上乗せされたかを一緒に探しましょう。</div>
+
+      <details class="kBudgetDetails">
+        <summary>1食の内訳と、上乗せの具体例を見る</summary>
+        <div class="kBudgetBody">
+          <div class="kMealTitle">🍽 1食の普通の食事（概算）</div>
+          <div class="kMealRows">
+            <div class="kMealRow"><span>🍚 白ごはん1膳・150g</span><b>約40〜50mg</b></div>
+            <div class="kMealRow"><span>🐟 肉・魚・卵などの主菜</span><b>約200〜300mg</b></div>
+            <div class="kMealRow"><span>🥬 ゆでた野菜の副菜</span><b>約100〜150mg</b></div>
+            <div class="kMealRow"><span>🥣 味噌汁1杯</span><b>約100〜180mg</b></div>
+            <div class="kMealRow total"><span>1食合計</span><b>約450〜600mg</b></div>
+          </div>
+          <div class="kMealNote">白ごはんはKが少なめです。主なKは、肉・魚、野菜、汁物の具から入ります。量や献立で大きく変わるため、厳密な計算ではなく全体像をつかむための目安です。</div>
+
+          <div class="kMisoBox">
+            <b>🥣 味噌汁は「味噌」より具で変わる</b>
+            <div>・わかめ・ねぎなど少量：<strong>約80〜150mg</strong><br>・豆腐・野菜入り：<strong>約150〜250mg</strong><br>・いも・かぼちゃ・豆・具だくさん：<strong>250〜400mg以上</strong>になることも</div>
+            <div class="kMisoTip">水分・塩分にも注意し、具を食べて汁は残すのが基本です。</div>
+          </div>
+
+          <div class="kExtraTitle">🍎 普通の食事に上乗せされやすいもの</div>
+          <div class="kExtraGrid">
+            <div class="kExtraItem"><b>🍌 バナナ1本</b>約300〜360mg</div>
+            <div class="kExtraItem"><b>🧃 濃い野菜ジュース1本</b>約500〜650mgの製品も</div>
+            <div class="kExtraItem"><b>🥜 ナッツひとつかみ</b>約150mg</div>
+            <div class="kExtraItem"><b>🍊 みかん2個</b>約200〜260mg</div>
+            <div class="kExtraItem wide"><b>🍹 果汁100％ジュース500mL</b>約550〜950mg</div>
+          </div>
+
+          <div class="kBudgetCaution"><b>注意：</b>約400〜600mgは「必ず食べてよい残り枠」ではありません。血清K、残尿、便通、透析量などで変わります。主治医・管理栄養士の指示を優先してください。</div>
+          <div class="kBudgetSource">※1日2,000mg以下：日本透析医学会「慢性透析患者の食事療法基準」。食品量は日本食品標準成分表などをもとにした概算です。</div>
+        </div>
+      </details>
+    </div>
+  </div>
+</details>
+
+<details class="morebox" id="sourceDrawer" style="margin:14px 0 0">
+  <summary><span style="display:flex;align-items:center;gap:12px"><span style="font-size:27px;line-height:1;flex:0 0 auto">📚</span><span><b style="font-size:18px;display:block;line-height:1.3">参考文献・出典</b><span style="font-size:13px;color:var(--sub);display:block;margin-top:2px;font-weight:600">数値の根拠を確認する</span></span></span></summary>
+  <div class="morecontent">
+    <div class="info" style="margin-top:2px">
+      <p style="margin:0 0 8px"><b>1日カリウム摂取量の目安（2,000mg以下）：</b><br>日本透析医学会「慢性透析患者の食事療法基準」（2014年版）</p>
+      <p style="margin:0 0 8px"><b>食品・飲料のカリウム含有量：</b><br>文部科学省「日本食品標準成分表（八訂）増補2023年」をもとにした概算値。品種・産地・加工方法・製品により、実際の含有量は変動します。</p>
+      <p style="margin:0;font-size:12px;color:var(--sub)">※血清カリウムの目標値や1日の制限量は、原疾患・残腎機能・透析条件などにより個人差が大きいため、必ず主治医・管理栄養士の指示に従ってください。本ツールは教育目的の参考情報であり、診断・治療の代わりにはなりません。</p>
+    </div>
+  </div>
+</details>
+
+<p class="note">このツールは教育の補助です。カリウム・水分・たんぱくの制限は人によって違います。治療の判断は必ず主治医・医療スタッフに相談してください。</p>
+</section>
+
+<!-- COOK GUIDE -->
+<section id="cookguide" class="screen">
+  <div class="card">
+    <h2>💧 ゆでこぼし・水さらしの違い</h2>
+    <p class="lead">カリウムを減らす方法を、食材別に分かりやすく確認します。ここでは原因判定や入力は行いません。</p>
+
+    <div class="cookHero"><b>結論：水にさらすだけより、「薄く切ってゆで、ゆで汁を捨てる」方が確実です。</b><br>特に、いも・かぼちゃ・根菜を大きな塊のまま水につけても、中心部のカリウムはほとんど抜けません。</div>
+
+    <h3 style="color:#7a4d00">🥬 薄い葉物と、🥔 身が詰まった食材の違い</h3>
+    <div class="cookCompare">
+      <div class="cookCard mid"><span class="mark">△</span><b>薄い葉物</b>レタス・キャベツ・白菜など。細かく切って水にさらすと一部のKが減ることがありますが、ゆでこぼしより効果は小さめです。</div>
+      <div class="cookCard bad"><span class="mark">⚠️</span><b>いも・かぼちゃ・根菜</b>身が厚く密度が高いため、乱切りやブロックの水さらしでは表面付近しか抜けません。薄切り・細切りが重要です。</div>
+    </div>
+
+    <div class="cookAnalogy"><b>イメージ：</b>薄い葉物は「薄い布」、いもは「厚い消しゴム」のようなもの。厚い食材ほど、水やお湯に触れる<b>断面を増やす</b>必要があります。</div>
+
+    <h3 style="color:#7a4d00;margin-top:18px">カリウムを減らす3ステップ</h3>
+    <div class="cookSteps">
+      <div class="cookStep"><div class="num">1</div><div><b>小さく・薄く切る</b><br><small>丸ごと・大きな乱切りではなく、薄切りや細切りにします。</small></div></div>
+      <div class="cookStep"><div class="num">2</div><div><b>たっぷりのお湯でゆでる</b><br><small>十分な湯量でゆで、Kを外の湯へ移しやすくします。</small></div></div>
+      <div class="cookStep"><div class="num">3</div><div><b>ゆで汁を捨てる</b><br><small>煮汁やスープを飲むと、溶け出したKも一緒にとります。葉物は水気をよく切ります。</small></div></div>
+    </div>
+
+    <div class="cookPotato"><b>🥔 いも・かぼちゃは特に注意</b><br>じゃがいも・さつまいも・かぼちゃ・にんじんなどは、<b>大きな塊のまま水にさらすだけでは不十分</b>です。薄切り・細切りにしてからゆで、ゆで汁を捨てましょう。</div>
+
+    <div class="cookTrapList">
+      <div class="cookTrap"><b>🍛 カレー・肉じゃが</b><br>いもは別ゆでし、ゆで汁を捨ててから加えます。煮汁やルウまで食べると、溶け出したKも一緒に戻ります。</div>
+      <div class="cookTrap"><b>🥔 ポテトサラダ</b><br>丸ごとゆでてからつぶすのではなく、薄切り・細切りでゆでこぼしてからつぶします。</div>
+      <div class="cookTrap"><b>📱 レンジ・蒸し料理</b><br>水分を捨てない調理は、ゆでこぼしの代わりにはなりません。</div>
+    </div>
+
+    <div class="cookCompare">
+      <div class="cookCard best"><span class="mark">◎</span><b>おすすめ</b>薄く切る → たっぷりの湯でゆでる → ゆで汁を捨てる</div>
+      <div class="cookCard mid"><span class="mark">△</span><b>水さらしだけ</b>葉物や薄切りでは一部減りますが、これだけで安心はできません。</div>
+      <div class="cookCard bad"><span class="mark">×</span><b>レンジ・煮汁ごと</b>Kを含む水分を捨てないため、減らす方法にはなりにくいです。</div>
+    </div>
+
+    <div class="cookNote">※減る割合は、食材・切り方・ゆで時間・湯量で変わります。調理してもKがゼロになるわけではないため、食べる量も大切です。</div>
+    <button class="btn" data-go="home">表紙にもどる</button>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why" class="screen">
+  <div class="card">
+    <h2>💡 なんでカリウム、下げるの？</h2>
+    <p class="lead">3分で読めます。「なんとなく気をつける」より、理由がわかった方が続けやすくなります。</p>
+
+    <div class="cookHero"><b>結論：カリウムが高いと、はっきりした前ぶれがないまま、不整脈や心停止につながることがあります。</b><br>だからこそ、症状が出る前に食事や生活で防ぐことが大切です。</div>
+
+    <h3 style="color:#7a4d00">🫀 カリウムと心臓の関係</h3>
+    <p style="margin:0 0 6px">カリウムは筋肉や心臓の動きに欠かせないミネラルです。ただし多すぎると、心臓を動かす電気信号が乱れ、<b>不整脈</b>を起こすことがあります。重い場合は、突然の<b>心停止</b>につながることもある、体にとって重要な数字です。</p>
+
+    <div class="cookSteps">
+      <div class="cookStep"><div class="num">😶</div><div><b>ほとんど症状が出ません</b><br><small>K値が上がっても、初期は自覚症状がないことが多いです。</small></div></div>
+      <div class="cookStep"><div class="num">⚡</div><div><b>手足のしびれ・脱力感・動悸</b><br><small>やや高い状態が続くと、これらの症状が出ることがあります。</small></div></div>
+      <div class="cookStep"><div class="num">🚨</div><div><b>不整脈・突然の心停止</b><br><small>高い状態が続くと、前ぶれなく重い不整脈が起きることがあります。</small></div></div>
+    </div>
+
+    <h3 style="color:#7a4d00;margin-top:18px">なぜ透析中の方は特に注意が必要？</h3>
+    <p style="margin:0">健康な腎臓は、余分なカリウムを尿として毎日少しずつ出しています。腎機能が下がると、この働きが弱くなり、<b>週3回の透析</b>が主なカリウムの出口になります。透析と透析の間、特に<b>2日空く日（土日など）</b>は、体にカリウムがたまりやすい時間です。</p>
+
+    <h3 style="color:#7a4d00;margin-top:18px">今のK値、どのあたり？</h3>
+    <div class="cookCompare">
+      <div class="cookCard best"><span class="mark">◎</span><b>3.5〜5.0</b>ベストな目安の範囲</div>
+      <div class="cookCard mid"><span class="mark">△</span><b>5.3〜6.0</b>少し高め。原因を振り返るタイミング</div>
+      <div class="cookCard bad"><span class="mark">⚠️</span><b>6.0以上</b>要注意。6.5以上、症状があればすぐ連絡を</div>
+    </div>
+    <div class="cookNote">※目安は施設・主治医の指示によって異なります。ご自身の目標値は診察やスタッフとの面談で確認してください。</div>
+
+    <button class="btn" data-go="detect">🔎 今回の原因をさがす</button>
+    <button class="btn soft" data-go="home">表紙にもどる</button>
+  </div>
+</section>
+
+<!-- SIGNAL -->
+<section id="signal" class="screen">
+  <div class="card">
+    <h2>🚦 たべもの信号</h2>
+    <p class="lead">「まず見直したいもの」「量・頻度に注意」「比較的選びやすいもの」を色分けした早見表です。原因さがしとは別に、いつでも確認できます。</p>
+
+    <div class="tlSection">
+      <div class="tlHead red">🔴 まず見直したい（量・頻度が多いと特に注意）</div>
+      <div class="tlGrid">
+        <div class="tlItem"><b>🍌 生の果物を毎日・複数個</b><small>バナナ・柿・メロン・キウイなど</small></div>
+        <div class="tlItem"><b>🧃 濃い野菜・果物ジュース</b><small>小さな1本でも数百mgのことも</small></div>
+        <div class="tlItem"><b>🌿 青汁（特に牛乳割り・毎日）</b><small>割り方と回数で大きく変わる</small></div>
+        <div class="tlItem"><b>🍇 ドライフルーツ</b><small>水分が抜けて濃縮されている</small></div>
+        <div class="tlItem"><b>⚠️ 減塩しお・カリウム塩調味料</b><small>製品によりKが非常に多い</small></div>
+        <div class="tlItem"><b>🥔 いも・かぼちゃ（ゆでこぼしなし）</b><small>大きいまま調理すると抜けにくい</small></div>
+      </div>
+    </div>
+
+    <div class="tlSection">
+      <div class="tlHead yellow">🟡 量・頻度に注意</div>
+      <div class="tlGrid">
+        <div class="tlItem"><b>☕ コーヒー・濃い煎茶</b><small>杯数が増えると積み上がる</small></div>
+        <div class="tlItem"><b>🍅 トマトジュース</b><small>毎朝の習慣は要チェック</small></div>
+        <div class="tlItem"><b>🥛 豆乳・きなこ</b><small>毎日大量だと注意</small></div>
+        <div class="tlItem"><b>🥜 ナッツ・チョコ</b><small>ひとつかみ以上が毎日は注意</small></div>
+        <div class="tlItem"><b>🥣 具だくさんの味噌汁</b><small>いも・かぼちゃ・豆の具は多め</small></div>
+        <div class="tlItem"><b>🥑 アボカド</b><small>健康食として頻繁に増やす時</small></div>
+      </div>
+    </div>
+
+    <div class="tlSection">
+      <div class="tlHead green">🟢 比較的選びやすい</div>
+      <div class="tlGrid">
+        <div class="tlItem"><b>🍵 ほうじ茶・麦茶・ウーロン茶・紅茶</b><small>お茶の中では選びやすい</small></div>
+        <div class="tlItem"><b>🍎 りんご・ぶどう（適量）</b><small>果物の中では使いやすい候補</small></div>
+        <div class="tlItem"><b>🥬 ゆでこぼした野菜</b><small>薄切りにして、ゆで汁を捨てる</small></div>
+        <div class="tlItem"><b>🍚 白ごはん</b><small>K自体は少なめ</small></div>
+      </div>
+    </div>
+
+    <div class="cookNote">※色分けは「量・頻度が多いと」の目安です。1回だけなら緑でなくても大きな原因になりにくいこともあります。最終的な制限は主治医・管理栄養士の指示に従ってください。</div>
+    <button class="btn" data-go="home">表紙にもどる</button>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="screen">
+  <div class="card">
+    <h2>🕹️ くらべるクイズ</h2>
+    <p class="lead">2つのうち、カリウムが多いのはどっち？「隠れカリウム」を見ぬく練習です。</p>
+    <div id="quizBody"></div>
+  </div>
+</section>
+
+<!-- DETECT -->
+<section id="detect" class="screen">
+<div class="steps"><i class="dot on"></i><i class="dot"></i><i class="dot"></i></div>
+<div class="card step" data-step="0">
+<h2>🔍 何が増えましたか？</h2>
+<p class="lead">最近の食事から、当てはまるものをタップしてください。複数選べます。<a href="#" id="openBudgetFromDetect" style="display:inline-block;margin-top:6px;color:var(--main2);font-weight:900;text-decoration:none;font-size:13px">📊 1日の目安の考え方を見る →</a></p>
+<div class="sectionCue"><span class="increaseEm">増えた・多かった</span>ものを選んでください<small>食品・飲み物・最近の生活変化から選びます</small></div>
+<div id="foodgroups"></div>
+<div class="selectionSummary" id="selectionSummary">
+  <div class="selectionText"><b>選択中：0件</b><span>タップした内容がここに表示されます</span></div>
+</div>
+<button class="btn" id="next1">次へ：お薬・便秘・体調</button></div>
+<div class="card step" data-step="1" style="display:none"><h2>💊 お薬・体調は？</h2><p class="lead">思い当たるものだけタップしてください。複数OK。体調や薬が大きく変わった場合は、この画面とは別にスタッフへ伝えてください。</p>
+<div class="chips" id="medchips"></div>
+<div class="constip"><h3 style="margin:0 0 6px">🚽 便秘はKの大敵</h3><p style="margin:0;font-size:15px">腎機能が落ちると<strong>うんちからKを捨てる働き</strong>も大事になります。便秘で出口がつまると<strong>Kが上がりやすい</strong>。お通じを整えるのが近道です。</p></div>
+<button class="btn" id="resultBtn">🕵️ 原因を発表</button></div>
+<div class="card step" data-step="2" style="display:none"><h2>🕵️ 原因が見つかりました</h2><div id="result"></div>
+<button class="btn" data-go="staff">📄 レポートとして表示する</button>
+<button class="btn soft" id="redo">もう一度さがす</button></div>
+</section>
+
+
+<!-- TIMING -->
+<section id="timing" class="screen">
+  <div class="timingHero">
+    <h2>📅 果物を食べるタイミング</h2>
+    <p class="lead">透析中の方へのコツです。<b>同じ果物でも、食べる日でKの上がりやすさが変わります。</b></p>
+    <div class="key">食べるなら「透析した日」がおすすめ</div>
+  </div>
+
+  <div class="card">
+    <h2>どちらの透析パターンですか？</h2>
+    <div class="scheduleSwitch">
+      <button class="sel" data-sch="mwf">月・水・金</button>
+      <button data-sch="tts">火・木・土</button>
+    </div>
+
+    <div class="fruitTimingNote">
+      <b>透析日のコツ：</b>透析<b>前</b>は控える（採血で測るのは透析前のK）。透析<b>後</b>はKが一番低いので食べてOK。<br>
+      <b>考え方：</b>透析直後はKが下がったあと。次の透析まで中1日ならまだ調整しやすいです。逆に、<b>2日空きの前半〜後半に果物が続く</b>と、次の採血でKが高く出やすくなります。
+    </div>
+
+    <div class="weekline" id="weekline"></div>
+
+    <div class="timingLegend">
+      <div class="lg caution"><b>✋ 透析前は控える</b><br>採血で測るのは透析前のK。直前の高K食は控えめに。</div>
+      <div class="lg good"><b>🍎◎ 透析後は食べてOK</b><br>Kが一番低いタイミング。量を決めれば比較的安全。</div>
+      <div class="lg danger"><b>⚠️ 2日空きは要注意</b><br>連日・大きく・何個も食べるとKが積み上がりやすい。週末前の透析後も控えめに。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>なぜ2日空きは上がりやすい？</h2>
+    <div class="riskFlow">
+      <div>🍉 スイカ・みかん・びわを食べる</div>
+      <div class="arrowDown">↓</div>
+      <div>次の透析まで時間が長い</div>
+      <div class="arrowDown">↓</div>
+      <div class="bad">Kが体にたまりやすい</div>
+      <div class="arrowDown">↓</div>
+      <div class="bad">週明け採血で K 5.8〜6.3 になることがある</div>
+    </div>
+    <div class="riskFlow">
+      <div>✅ 透析した日の夕食後に少量</div>
+      <div class="arrowDown">↓</div>
+      <div class="ok">次の透析まで調整しやすい</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>患者さんへの言い方</h2>
+    <div class="info"><b>「果物は絶対だめ」ではありません。</b><br>食べるなら、量を決めて、できれば<b>透析した日のあと</b>にしましょう。</div>
+    <div class="info"><b>月水金の方：</b>月曜透析後・水曜透析後が候補。土日で連日食べるのは注意。</div>
+    <div class="info"><b>火木土の方：</b>火曜透析後・木曜透析後が候補。日月で連日食べるのは注意。</div>
+    <button class="btn" data-go="detect">🔎 原因さがしに戻る</button>
+  </div>
+</section>
+
+<!-- REPORT -->
+<section id="staff" class="screen"><div class="card">
+<div class="sheet">
+<h2>📄 カリウム原因レポート</h2>
+
+<div class="info" style="text-align:center;margin-top:0"><b>今回のK</b><br><span id="sheetK" style="font-size:34px;font-weight:1000;color:var(--main2)"></span> mEq/L</div>
+<div id="sheetCause"></div>
+<h3>今回、聞きたいこと</h3>
+<textarea id="askText" rows="3" placeholder="例：便秘薬を調整したい／果物はどれくらいならよいか／血圧の薬を変えてから上がった気がする"></textarea>
+</div>
+<button class="btn" id="printReportBtn" type="button">レポートを印刷・保存する</button>
+<button class="btn saveImageBtn" id="saveReportImageBtn" type="button">📷 レポートを写真に保存する</button>
+</div></section>
+
+<div class="modal" id="imgSaveModal">
+  <div class="modalIn">
+    <h2 style="margin:0 0 10px;font-size:19px">📷 画像を保存</h2>
+    <p style="margin:0 0 12px;font-size:14px;color:var(--sub)">画像を<b>長押し</b>して「写真に保存」（Androidは「画像をダウンロード」）を選んでください。</p>
+    <img id="imgSavePreview" src="" alt="カリウム原因レポート" style="width:100%;border-radius:12px;border:1px solid var(--line);display:block">
+    <button class="btn soft" id="imgSaveCloseBtn" type="button" style="margin-top:14px">閉じる</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const st={k:null,kEntered:false,food:[],fruitdetail:[],drinkdetail:[],juicedetail:[],juicefreq:{},drinkfreq:{},aojirukind:null,aojirumix:null,aojirufreq:null,chocoamt:null,chocofreq:null,cocoatype:null,cocoafreq:null,seasoningdetail:[],fruitfreq:{},fruitgap:null,nutsamount:null,nutspattern:null,cook:null,med:[],causes:[]};
+
+/* ---------- 食べ物（共通） ---------- */
+const food=[
+['juice','🧃','野菜・果物ジュース','種類・量・回数を確認','小さな1本でも、製品によってカリウムが数百mg含まれます。種類・1回量・飲む回数を確認します。','いったん休み、麦茶・ほうじ茶へ。商品の表示をスタッフと確認','飲み物・健康飲料'],
+['aojiru','🌿','青汁・健康食品','酵素・粉末・漢方含む','健康のつもりでも、青菜や粉末が濃縮されてKが高いことがあります。CKD・透析では危険なことがあります。','製品の袋をスタッフに見せる。自己判断で増やさない','飲み物・健康飲料'],
+['greens','🥬','ほうれん草・小松菜','生100gを目安','生のままではKが水に逃げません。ゆでこぼして汁を捨てると減らせます。','たっぷりのお湯でゆで、水にさらしてしぼる','野菜'],
+['salad','🥗','生野菜サラダ','大皿1杯','キャベツ・レタスだけなら比較的少なめでも、トマト・アボカド・コーンを加えると増えます。','小鉢量にし、高Kの具材を重ねない','野菜'],
+['tomato','🍅','トマト','中1個（約150g）','1個なら中等度ですが、大玉・毎日・ジュースでは増えます。','小ぶり1個まで。ジュースは控える','野菜'],
+['mushroom','🍄','きのこ類','炒め物・鍋で約100g','低カロリーでも、何種類もたっぷり使うと量が増えます。乾燥品は濃縮されています。','小鉢程度にし、鍋やスープの汁は残す','野菜'],
+['seaweed','🌿','海藻類','小鉢・乾燥品','少量なら影響は限られますが、乾燥品・ひじき・めかぶを毎日食べる場合は注意します。','乾燥品は戻した後の量を少なめにし、毎日は避ける','野菜'],
+['corn','🌽','とうもろこし・コーン','1本（可食部約150g）','食べやすく、ゆでてもKが十分には減りにくいです。コーン缶も料理に重なると量を見落としやすくなります。','1/3〜1/2本程度。缶詰は汁を切る','野菜'],
+['potato','🥔','じゃがいも','中1個（約120〜150g）','煮物や粉ふきいもでは、煮汁まで食べるとKが残ります。','薄く切って水にさらし、たっぷりのお湯でゆでこぼす','いも類'],
+['sweetpotato','🍠','焼きいも・さつまいも','中1/2本（約100g）','焼くだけではKが外へ逃げず、量も増えやすいです。','1回量を半分にし、毎日は避ける。薄く切ってゆでこぼす','いも類'],
+['pumpkin','🎃','かぼちゃ','煮物小鉢（約100g）','身が詰まっており、水さらしだけでは減りにくい食材です。','下ゆでして汁を捨て、小鉢量にする','野菜'],
+['edamame','🫛','枝豆','小鉢（約70〜100g）','つまみながら量が増えやすく、Kとリンの両方に注意します。','小皿に出して量を決める','豆・大豆製品'],
+['natto','🫘','納豆','1パック（約40〜50g）','1回量は多くありませんが、毎朝続くと積み上がります。','毎日ではなく頻度を決める','豆・大豆製品'],
+['tofu','🥛','豆腐','1/2丁（約150g）','種類や水分量で差があり、毎日の大豆習慣で積み上がります。','量と頻度を決める','豆・大豆製品'],
+['beans','🫘','納豆・豆のおかず','枝豆・煮豆・あずき','豆類はKもリンも多めです。納豆を毎日、枝豆を小鉢以上、煮豆を続けて食べると積み上がります。','納豆は頻度を決める。枝豆・煮豆は小皿まで','豆・大豆製品'],
+['soy','🥛','豆腐・豆乳・きなこ','毎日の習慣・大豆製品','豆腐は量、豆乳は飲む量、きなこは粉末で濃縮される点がポイントです。健康のために毎日増やした時は見直します。','豆腐は適量に。豆乳・きなこを毎日続ける時はスタッフに相談','豆・大豆製品'],
+['choco','🍫','チョコ・ココア','板チョコ・ココア飲料','カカオ製品はK・リンが多めです。少量でも毎日続く、ココアを何杯も飲むと積み上がります。','チョコは1〜2かけ。ココアは量と回数を減らす','おやつ・間食'],
+['imosnack','🍠','いも系おやつ','芋けんぴ・ポテトチップス','いも由来でKが多く、乾燥・揚げることで量を食べやすくなります。1袋食べると一気に増えます。','小袋でも半分まで。毎日は避ける','おやつ・間食'],
+['anko','🍡','あんこ・和菓子','ようかん・どら焼き・大福','小豆由来でKを含みます。毎日のお茶うけや複数個で積み上がります。','1回量と回数を決める','おやつ・間食'],
+['salt','⚠️','減塩しお・減塩調味料','塩化カリウム入り製品に注意','一部の減塩しお・減塩しょうゆ・減塩だしには、塩味を補うため塩化カリウムが使われています。すべての製品ではないため、原材料・栄養成分表示を確認します。','塩化カリウム入りは避け、酢・香辛料・通常のだしを少量使う','調味料'],
+['sauce','🍅','ケチャップ・ソース類','濃縮原料と使う量に注意','ケチャップ、焼肉のたれ、濃厚ソースなどは、トマト・果物・野菜の濃縮原料を含みます。少量より、たっぷり使う習慣が問題になります。','かけずに小皿へ出して、少量つける','調味料'],
+['out','🍽','外食・弁当','旅行・行事','外食は量が増え、ゆでこぼしも難しく、トマト・いも・豆・汁物が重なりやすいです。','前後で果物・いも・ジュースを控える','最近の生活変化'],
+['gift','🎁','もらいもの','果物・いも菓子','いただき物は「早く食べないと」で連日になりやすいです。果物・芋菓子が特に原因になります。','家族と分ける。日を分ける。冷凍も検討','最近の生活変化']
+];
+
+
+
+const fruitDetail=[
+['mikan','🍊','みかん','1個','約100〜130mg','毎日注意','1個あたりは中等度でも、冬に毎日2〜4個になると高Kの原因になります。患者さんは「みかんくらい」と思いやすいので要注意です。','1日1個まで。毎日続くなら回数を決める'],
+['banana','🍌','バナナ','1本','約320mg','高','果物の中でも高め。毎日1本は上がりやすいです。','半分にする／毎日をやめる'],
+['watermelon','🍉','スイカ','1切れ','約180mg','毎日注意','1切れは中等度でも、水分が多く食べやすく、夏に毎日・大きく・何切れも食べるとKが上がります。','小さめ1切れを目安。毎日は避ける'],
+['biwa','🟠','びわ','1個','約50〜80mg','毎日注意','1個あたりは少なめでも、小さいため5個・10個と食べやすく、旬の時期に毎日続くと高Kの原因になります。','最初に個数を決める。連日は避ける'],
+['kiwi','🥝','キウイ','1個','約250mg','高','小さいのにKが多め。毎日だと積み上がります。','半分〜1個、頻度を決める'],
+['persimmon','🟧','柿','1個','約300mg','高','秋に連日になりやすく、1個あたりKも多めです。','半分まで、毎日は避ける'],
+['melon','🍈','メロン','1切れ','約300mg','高','水分が多く食べやすいですが、1切れでKは多めです。','小さめ1切れまで'],
+['driedF','🟤','ドライフルーツ','ひとつかみ約20g','約150〜300mg','濃縮注意','レーズン・干し柿・干しあんず等。水分が抜けて濃縮され、見た目以上に果物を食べたことになります。小袋1袋・毎日で積み上がります。','小皿に少量。毎日・小袋1袋は避ける'],
+['avocadoF','🥑','アボカド','1/2個','約500mg','かなり高','ふだんの量は少なくても、健康食として増やすと1回でKが大きく上乗せされます。','1/4個まで、毎日は避ける'],
+['apple','🍎','りんご','1/2個','約150mg','低〜中','果物の中では使いやすい候補。ただし丸ごと毎日なら注意です。','半分を目安に'],
+['grape','🍇','ぶどう','小房','約130mg','低〜中','1回量なら比較的使いやすいですが、房で食べ過ぎると増えます。','小房に分ける']
+];
+
+const vegDetail=[
+['sweetpotato','🍠','焼きいも・さつまいも','中1/2本（約100g）','約450〜500mg','かなり高','焼くだけではKが外へ逃げず、量も増えやすいです。','1回量を半分にし、毎日は避ける。薄く切ってゆでこぼす'],
+['potato','🥔','じゃがいも','中1個（約120〜150g）','約400〜600mg','かなり高','煮物や粉ふきいもでは、煮汁まで食べるとKが残ります。','薄く切って水にさらし、たっぷりのお湯でゆでこぼす'],
+['pumpkin','🎃','かぼちゃ','煮物小鉢（約100g）','約350〜450mg','高','身が詰まっており、水さらしだけでは減りにくい食材です。','下ゆでして汁を捨て、小鉢量にする'],
+['corn','🌽','とうもろこし・コーン','1本（可食部約150g）','約350〜450mg','高','食べやすく、ゆでてもKが十分には減りにくいです。コーン缶も料理に重なると量を見落としやすくなります。','1/3〜1/2本程度。缶詰は汁を切る'],
+['edamame','🫛','枝豆','小鉢（約70〜100g）','約350〜500mg','高','つまみながら量が増えやすく、Kとリンの両方に注意します。','小皿に出して量を決める'],
+['greens','🥬','ほうれん草・小松菜','生100gを目安','約300〜700mg','調理法で変化','生のままではKが水に逃げません。ゆでこぼして汁を捨てると減らせます。','たっぷりのお湯でゆで、水にさらしてしぼる'],
+['tomato','🍅','トマト','中1個（約150g）','約300mg','毎日注意','1個なら中等度ですが、大玉・毎日・ジュースでは増えます。','小ぶり1個まで。ジュースは控える'],
+['natto','🫘','納豆','1パック（約40〜50g）','約250〜350mg','毎日注意','1回量は多くありませんが、毎朝続くと積み上がります。','毎日ではなく頻度を決める'],
+['mushroom','🍄','きのこ類','炒め物・鍋で約100g','約250〜400mg','量に注意','低カロリーでも、何種類もたっぷり使うと量が増えます。乾燥品は濃縮されています。','小鉢程度にし、鍋やスープの汁は残す'],
+['tofu','🥛','豆腐','1/2丁（約150g）','約200〜300mg','毎日注意','種類や水分量で差があり、毎日の大豆習慣で積み上がります。','量と頻度を決める'],
+['salad','🥗','生野菜サラダ','大皿1杯','約150〜400mg','組み合わせ注意','キャベツ・レタスだけなら比較的少なめでも、トマト・アボカド・コーンを加えると増えます。','小鉢量にし、高Kの具材を重ねない'],
+['seaweed','🌿','海藻類','小鉢・乾燥品','製品・戻し方で差','種類差大','少量なら影響は限られますが、乾燥品・ひじき・めかぶを毎日食べる場合は注意します。','乾燥品は戻した後の量を少なめにし、毎日は避ける']
+];
+
+const drinkDetail=[
+['gyokuroD','🍵','玉露','100mLあたり約340mg','非常に高い','浸出液でもKがかなり多いお茶です。少量でも他のお茶より影響が大きくなります。','高K時は避ける。普段は麦茶・ほうじ茶へ'],
+['matchaD','🍵','抹茶・粉茶','茶葉ごと飲む','要注意','抹茶や粉茶は茶葉をそのまま飲むため、浸出液よりKを取り込みやすくなります。濃さと杯数が重要です。','毎日は避ける。薄い煎茶・ほうじ茶へ'],
+['coffeeD','☕','コーヒー','100mLあたり約65mg','杯数注意','1杯だけなら極端ではありませんが、マグカップで何杯も飲むと積み上がります。インスタントを濃く作る場合も注意です。','1日1〜2杯程度を目安にし、濃くしすぎない'],
+['senchaD','🍵','煎茶','100mLあたり約27mg','比較的少なめ','普通の濃さなら玉露よりかなり少なめです。ただし濃く淹れて何杯も飲むと増えます。','薄めにして杯数を決める'],
+['hojichaD','🍵','ほうじ茶','100mLあたり約24mg','選びやすい','普通の浸出液は比較的Kが少なめで、日常のお茶として選びやすい方です。','濃くしすぎず、飲水量の指示内で'],
+['oolongD','🫖','ウーロン茶','100mLあたり約13mg','少なめ','無糖の浸出液はKが少なめです。ペットボトル製品は商品表示も確認してください。','無糖を選び、量は水分指示内で'],
+['blackteaD','🫖','紅茶','100mLあたり約8mg','少なめ','ストレートならKは少なめです。ただしミルクティーは牛乳分のKが加わります。','ストレートまたはミルク少量'],
+['mugichaD','🧊','麦茶','100mLあたり約6mg','かなり少ない','Kが少なく、カフェインも含まないため選びやすい飲み物です。','水分制限の範囲で利用する']
+];
+
+const juiceDetail=[
+['juice_veg','🥬','濃い・栄養強化型の野菜ジュース','200mLで約500〜650mgの製品も','high','「1日分の野菜」「野菜100％」など。小さな紙パックでも、製品によってバナナ約1.5〜2本分に近いKを含みます。','まず1週間休み、麦茶・ほうじ茶へ。野菜はゆでこぼして食べる'],
+['juice_smoothie','🥤','スムージー・手作りジュース','果物・野菜を何個分も','high','手作り・無添加でもKは減りません。固形なら食べにくい量を、短時間で飲み切りやすくなります。','いったん中止。果物は形のあるまま少量にし、家族にも伝える'],
+['juice_tomato','🍅','トマトジュース','製品・量によって高め','caution','健康のための毎朝習慣になりやすい飲み物です。トマトが濃縮され、量が増えるとKも増えます。','毎朝をやめて麦茶へ。飲む量はスタッフと相談する'],
+['juice_100','🍊','果汁100％ジュース','コップ1杯で果物数個分になることも','caution','100％・無添加でもKは入っています。オレンジなどを、果物の形より多く一度に取りやすくなります。','ジュースを休み、果物は形のあるまま1回量を決める'],
+['juice_mix','🧃','野菜・果物ミックス','200mLで約100〜600mg','moderate','商品や原料でK量の幅が大きく、甘くて飲みやすいため、大ボトルから量が増えやすいタイプです。','大ボトルは買わず、麦茶・無糖炭酸水へ。K表示があれば確認する']
+
+];
+const chocoAmount=[
+['choco_small','🍫','1〜2かけ','約5〜10g：ミルクチョコなら大きな原因になりにくい量です。','K 約20〜45mg・少なめ'],
+['choco_half','🍫','板チョコ半分・小袋','約25g：高カカオ製品では同じ量でもKが多くなることがあります。','K 約100〜160mg・中'],
+['choco_one','🍫','板チョコ1枚','約50g：一度に食べるとKが大きく上乗せされます。','K 約200〜330mg・高']
+];
+const chocoFrequency=[
+['choco_daily','🔁','ほぼ毎日','少量でも積み上がります']
+];
+const cocoaType=[
+['cocoa_hotwater','☕','お湯で作った','1杯：粉の種類や量で差があります。','K 約140〜150mg・中'],
+['cocoa_milk','🥛','牛乳で作った','1杯：牛乳のKが加わるため、負担が大きくなります。','K 約320〜330mg・高']
+];
+const cocoaFrequency=[
+['cocoa_daily','🔁','毎日・1日何杯も飲む','銅補給の目的でも注意']
+];
+const seasoningDetail=[
+['season_saltk','⚠️','減塩しお・減塩しょうゆ','製品差が非常に大きい','high','減塩しおは1gあたりK約190mg。製品例では、ひと振り0.1gならK約19mg、小さじ1杯約6gならK約1,140mgです。減塩しょうゆは多くが大さじ1杯でK約25〜70mgですが、カリウム塩使用製品では800mg前後になることがあります。必ず栄養成分表示を確認してください。','「塩化カリウム」「カリウム塩」の表示がある製品は避け、商品をスタッフに見せる'],
+['season_ketchup','🍅','ケチャップを多く使った','大さじ1杯でK約60mg','caution','トマトケチャップは100gあたりK約380mgで、大さじ1杯（約15g）なら約60mgです。1杯だけなら大きな負担ではありませんが、オムライスやナポリタンなどで何杯も使うと上乗せされます。','料理にかけず、小皿に出して少量つける'],
+['season_sauce','🥩','焼肉のたれ・濃厚ソース','焼肉・お好み焼き・とんかつなど','caution','焼肉のたれや濃厚ソースには、果物・玉ねぎ・にんにく・トマトなどの濃縮原料が使われます。食べる日より、使う量が増えた時に注意します。','最初に小皿へ少量だけ出し、「かける」から「つける」へ変える'],
+['season_sesame','🥗','ごまドレッシング','サラダにたっぷり','moderate','ごま由来のカリウムとリンを含みます。生野菜を多く食べ、さらにドレッシングをたっぷり使うと上乗せが重なります。','ドレッシングは別皿に少量。ノンオイルでも量は決める']
+];
+
+
+const freqOptions=[
+['daily','🔁','毎日','5〜7日／週'],
+['sometimes','📅','週1〜3回','時々'],
+['once','1️⃣','今回だけ','普段はしない']
+];
+
+/* ---------- 透析の2日空き（補完：未定義だった配列を定義） ---------- */
+const fruitGap=[
+['gap_yes','⚠️','はい、長くあく日に食べた','金曜の透析後〜日曜、土曜の透析後〜月曜など'],
+['gap_after','🙂','透析した日のあとに少量食べた','次の透析まで長くあかない日に少量だった'],
+['gap_na','—','食べていない／当てはまらない','今回は果物を食べていない・透析中ではない方など']
+];
+
+/* ---------- 薬・体調（モード別） ---------- */
+const medCommon=[
+['kforget','💊','カリウムを下げる薬を<br>飲み忘れた','ロケルマ・カリメート等を使っている方'],
+['constip','🚽','便秘ぎみ','2〜3日に1回以下／便秘薬を忘れた'],
+['shortHD','🩸','透析時間が短かった・休んだ','透析を受けている方だけ'],
+['none','✅','思い当たることはない','','wide']
+];
+
+/* ---------- if-then 作戦テンプレ ---------- */
+const ifthen={
+constip:'朝ごはんのあと、かならずトイレに座る',
+lax:'寝る前に、便秘薬を忘れず飲む',
+drugconst:'薬で便秘になることを、次の受診でスタッフに伝える',
+kforget:'ごはんを食べるとき、カリウムの薬もいっしょに飲む',
+shortHD:'透析時間が短くなった日をメモして、スタッフに伝える',
+fruitdetail:'果物は種類を選び、1回量を半分にする',
+fruitdaily:'スイカ・みかん・びわは「毎日」をやめ、個数を決める',
+fruitheavy:'高K果物は半分にして、毎日は避ける',
+fruitgap2:'次の透析まで長くあく日は果物を控え、食べるなら長くあかない日に少量にする',
+fruit:'果物は1日半分まで。残りは次の日に',
+gyokuro:'玉露・抹茶・粉茶を麦茶・ほうじ茶に変える',
+drinkhigh:'玉露・抹茶・濃いコーヒーを減らし、麦茶・ほうじ茶へ変える',
+coffeemany:'コーヒーは濃くしすぎず、1日1〜2杯までにする',
+greens:'青菜はたっぷりのお湯でゆで、水にさらしてしぼる',
+salad:'生野菜サラダは小鉢量にし、トマト・コーンなどを重ねない',
+sweetpotato:'焼きいもは半分にし、毎日は避ける。調理するなら薄く切ってゆでこぼす',
+edamame:'枝豆は小皿に出して量を決める',
+natto:'納豆は毎日ではなく、食べる回数を決める',
+tofu:'豆腐は1回量と頻度を決める',
+pumpkin:'かぼちゃは下ゆでして、煮汁は残す',
+nuts:'ナッツは小皿に少しだけ。袋から直接食べない',
+sauce:'ケチャップ・ソースは「かける」より「つける」にする',
+soup:'汁物・鍋・ラーメンの汁は残す',
+dietsum:'高カリウム食品が重なった日は、上乗せの食品をまず1つ減らす',
+juice:'野菜・果物ジュースを1週間休み、麦茶・ほうじ茶に替える',
+aojiru:'健康食品の袋を、次の受診で主治医に見せる',
+salt:'塩化カリウム入りの減塩調味料は避け、酢・香辛料で味つけする',
+seasoning:'調味料は「かける」より、小皿に出して少量つける',
+potato:'いもは切って水にさらし、ゆでこぼしてから食べる',
+beans:'納豆・豆類は回数と小皿量を決める',
+soy:'豆乳・きなこを毎日にせず、豆腐も量を決める',
+tomato:'トマトジュースは控えて、生は小ぶり1個まで',
+mushroom:'きのこは小鉢程度にし、鍋やスープの汁は残す',
+seaweed:'海藻は乾燥品と毎日の小鉢を避け、量を少なめにする',
+corn:'とうもろこしは1/3〜1/2本程度にし、缶詰は汁を切る',
+choco:'チョコは1〜2かけ、ココアは回数を減らす',
+imosnack:'芋けんぴ・ポテトチップスは小袋でも半分までにする',
+anko:'和菓子は1回量と回数を決める',
+out:'外食の前後の日は、果物といもを控えめにする',
+gift:'もらいものは家族と分けて、日を分けて食べる',
+cook:'野菜はゆでて、ゆで汁を捨ててから食べる',
+cook2:'高カリウムの食品の日は、必ずゆでこぼす',
+cooksoak:'水さらしだけで終わらず、薄く切ってゆで、ゆで汁を捨てる',
+cookmicrowave:'レンジだけで済ませず、ゆでて汁を捨てる。煮汁は残す'
+};
+
+/* ---------- 画面遷移 ---------- */
+let nav=[],curScreen='home',curStep=0;
+function show(id){$$('.screen').forEach(x=>x.classList.toggle('on',x.id===id));$('#back').classList.toggle('show',id!=='home');curScreen=id;scrollTo(0,0);
+ if(id==='staff')renderStaff(); if(id==='timing')renderTiming(document.querySelector('.scheduleSwitch button.sel')?.dataset.sch||'mwf'); if(id==='detect')buildMedChips();}
+function go(id){if(id!==curScreen)nav.push(curScreen);show(id);}
+function back(){if(curScreen==='detect'&&curStep>0){step(curStep-1);return;}const prev=nav.pop();show(prev||'home');}
+$$('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+$('#back').onclick=back;
+const homeCookBtn=document.getElementById('homeCookBtn');
+if(homeCookBtn){
+  homeCookBtn.onclick=()=>go('cookguide');
+}
+const openBudgetFromDetect=document.getElementById('openBudgetFromDetect');
+if(openBudgetFromDetect){
+  openBudgetFromDetect.addEventListener('click',e=>{
+    e.preventDefault();
+    go('home');
+    const d=document.getElementById('budgetDrawer');
+    if(d){d.open=true;setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'start'}),60);}
+  });
+}
+
+
+/* ---------- メーター（モード別） ---------- */
+function judge(k){
+ if(k<3.5)return['vhi','低すぎ注意','低すぎも危険です。しびれ・力が入らない時はすぐスタッフへ。'];
+ if(k<4.0)return['vlow','少し低め','減らしすぎ・食べなさすぎにも注意です。'];
+ if(k<=5.0)return['vok','よい範囲','5.0前後がひとつのベスト目安です。この調子で維持しましょう。'];
+ if(k<=5.3)return['vok','目標の範囲','目標内ですが、ベスト目安は5.0前後です。'];
+ if(k<6.0)return['vmid','少し高め','最近増えた食品や習慣を確認しましょう。'];
+ if(k<6.5)return['vmid','高め','食事・便秘・薬・体調の変化を確認しましょう。症状があれば相談を。'];
+ return['vhi','高いです','しびれ・脱力・動悸があればすぐ連絡を。早めの相談を。'];
+}
+function updateK(){
+ st.k=parseFloat($('#kslider').value);
+ st.kEntered=true;
+ $('#knum').textContent=st.k.toFixed(1);
+ $('#kslider').classList.remove('kunset');
+ $('#kslider').setAttribute('aria-valuetext',st.k.toFixed(1)+' mEq/L');
+ const prompt=$('#kInputPrompt');if(prompt)prompt.textContent='今回のK値：丸を動かすと変更できます';
+ const startBtn=document.querySelector('.homeMainCta');
+ if(startBtn){startBtn.disabled=false;startBtn.textContent='🔎 このK値で原因を探す';}
+ const[c,big,msg]=judge(st.k);
+ $('#verdict').className='verdict '+c;$('#verdict').innerHTML='<span class="big">'+big+'</span>'+msg;
+}
+$('#kslider').oninput=updateK;
+
+/* ---------- 食べ物チップ ---------- */
+function buildFoodChips(){
+ const cats=['果物','飲み物・健康飲料','野菜・いも・豆類','おやつ・間食','調味料','最近の生活変化'];
+ const catIcon={'果物':'🍎','飲み物・健康飲料':'🥤','野菜・いも・豆類':'🥬','おやつ・間食':'🍫','調味料':'🧂','最近の生活変化':'🎁'};
+ const groupedVegIds=['greens','tomato','mushroom','seaweed','corn','pumpkin','potato','beans','soy'];
+ const foodChipHtml=id=>{const f=food.find(x=>x[0]===id);const wide=id==='corn'?' wide':'';return f?`<button class="chip${wide}" data-type="food" data-id="${f[0]}"><span class="e">${f[1]}</span><b>${f[2]}</b><small>${f[3]}</small></button>`:'';};
+ $('#foodgroups').innerHTML=cats.map(cat=>{
+   let extra='';
+   if(cat==='果物') extra=`<button class="chip detailTrigger" id="fruitTrigger" data-type="detailtrigger" data-target="fruitInline"><span class="e">🍎</span><b>果物</b><small>生・ドライ。バナナ・みかん・スイカ等</small><span class="hint">種類と量を選ぶ</span><span class="selectedMini">0個選択中</span></button><div class="inlineDetail fruitInline" id="fruitInline"><div class="inlineHead"><div><h3>🍎 どの果物ですか？</h3><p>複数選べます。選び終えたら閉じても、ほかの食品を続けて選べます。</p></div><button type="button" class="inlineClose" data-close-detail="fruitInline">閉じる</button></div><p class="minilead"><b>表示順：</b>日本でよく食べられていて、原因になりやすい順に並べています。1個・1回量の多さだけでなく、毎日食べやすいかも考えています。</p><div class="fruitgrid" id="fruitdetailchips"></div><div class="fruitHabit"><h3>🍉 それぞれ、どれくらいの頻度で食べましたか？</h3><p>選んだ果物ごとに頻度を選んでください。<strong>同じ「毎日」でも、果物によって上がりやすさは違います。</strong></p><div id="fruitFreqList"></div><h3 style="margin-top:16px">📅 次の透析まで長くあく日に、果物を食べましたか？</h3><p class="minilead">金曜の透析後から日曜、または土曜の透析後から月曜などです。この間に果物が続くと、次の透析前までKがたまりやすくなります。</p><div class="chips" id="fruitgapchips"></div><div class="twoDayAlert"><span class="bigline">⚠️ 特に注意</span><b>次の透析まで長くあく日 × 連日 × 多め</b>が重なると、K高値のリスクが高くなります。<br>食べるなら、次の透析まで長くあかない日に少量を。</div><div class="fruitRule"><b>覚え方：</b>「食べたか」だけでなく、<b>毎日続いたか・次の透析まで長くあく日だったか</b>を見る。連日でなく、長くあく日でもなければ、大きな原因になりにくいことが多いです。</div></div><button type="button" class="inlineDone" data-close-detail="fruitInline">選択を完了して閉じる</button></div>`;
+   if(cat==='飲み物・健康飲料') extra=`<button class="chip detailTrigger" id="drinkTrigger" data-type="detailtrigger" data-target="drinkInline"><span class="e">🍵</span><b>お茶・コーヒー</b><small>種類・濃さ・杯数を確認</small><span class="hint">詳しく選ぶ</span><span class="selectedMini">0個選択中</span></button><div class="inlineDetail drinkInline" id="drinkInline"><div class="inlineHead"><div><h3>🍵 何をよく飲みましたか？</h3><p>同じお茶でもK量は違います。複数選べます。</p></div><button type="button" class="inlineClose" data-close-detail="drinkInline">閉じる</button></div><p class="minilead"><b>薄い赤：</b>Kが多い　<b>黄色：</b>杯数に注意　<b>緑：</b>比較的選びやすい</p><div class="drinkgrid" id="drinkdetailchips"></div><div class="drinkguide"><div class="warn" style="background:#fff0f0;border-color:#efa4a4"><b>🔴 Kが多い</b>玉露／抹茶・粉茶</div><div class="warn"><b>🟡 杯数に注意</b>コーヒー／濃い煎茶</div><div class="good"><b>🟢 比較的選びやすい</b>ほうじ茶／ウーロン茶／紅茶／麦茶</div></div><h3 class="sectionMini" style="margin-top:14px">② それぞれ、どれくらいの頻度で飲みましたか？</h3><p class="minilead">選んだお茶・コーヒーごとに頻度を選んでください。</p><div id="drinkFreqList"></div><button type="button" class="inlineDone" data-close-detail="drinkInline">選択を完了して閉じる</button></div><button class="chip detailTrigger" id="juiceTrigger" data-type="detailtrigger" data-target="juiceInline"><span class="e">🧃</span><b>野菜・果物ジュース</b><small>種類・量・回数を確認</small><span class="hint">詳しく選ぶ</span><span class="selectedMini">未入力</span></button><div class="inlineDetail juiceInline" id="juiceInline"><div class="inlineHead"><div><h3>🧃 野菜・果物ジュース</h3><p>飲んだ種類と、量・回数を選んでください。</p></div><button type="button" class="inlineClose" data-close-detail="juiceInline">閉じる</button></div><h3 class="sectionMini">① 何を飲みましたか？</h3><p class="minilead">複数選べます。赤い項目ほど、まず見直したい飲み物です。</p><div class="drinkgrid" id="juicedetailchips"></div><h3 class="sectionMini">② それぞれ、どれくらいの頻度で飲みましたか？</h3><p class="minilead">選んだ種類ごとに頻度を選んでください。</p><div id="juiceFreqList"></div><div class="juiceAlert"><span class="bigline">⚠️ 小さい紙パック1本でも見逃さない</span>濃い・栄養強化型の中には、<b>200mLでK約500〜650mg</b>の製品があります。<div class="juiceCompare"><div class="box">🧃 小さい紙パック<br>200mL</div><div class="eq">≒</div><div class="box">🍌 バナナ<br>約1.5〜2本分</div></div><p style="margin:9px 0 0">液体だから必ず危険というより、<b>数百mgを短時間で取りやすい</b>ことが問題です。</p></div><div class="juiceRule"><b>パッケージの見方：</b><br>①「野菜100％」「無添加」だけで安心しない<br>② 栄養成分表示に<b>カリウム（mg）</b>があれば確認<br>③ <b>1本全部・毎日・大ボトル</b>になっていないかを見る</div><div class="juiceSwap">✅ まずやること：今週はジュース類を休み、麦茶・ほうじ茶・無糖の炭酸水へ置き換えてみましょう。</div><button type="button" class="inlineDone" data-close-detail="juiceInline">入力を完了して閉じる</button></div><button class="chip detailTrigger" id="aojiruTrigger" data-type="detailtrigger" data-target="aojiruInline"><span class="e">🌿</span><b>青汁・健康食品</b><small>種類・割り方・回数を確認</small><span class="hint">詳しく選ぶ</span><span class="selectedMini">未入力</span></button><div class="inlineDetail drinkInline" id="aojiruInline"><div class="inlineHead"><div><h3>🌿 青汁、どのように飲みましたか？</h3><p>粉末か液体か、何で割ったか、回数を選んでください。</p></div><button type="button" class="inlineClose" data-close-detail="aojiruInline">閉じる</button></div><div class="foodcat">① 青汁の種類</div><div class="chips"><button class="chip" data-type="aojirukind" data-id="aojiru_powder"><span class="e">🟡</span><b>粉末タイプ</b><small>1包を水で：約30〜150mg</small></button><button class="chip" data-type="aojirukind" data-id="aojiru_liquid"><span class="e">🔴</span><b>冷凍・ストレート液体</b><small>100g前後：約150〜400mg以上</small></button></div><div class="foodcat">② 何で割りましたか？</div><div class="chips"><button class="chip" data-type="aojirumix" data-id="aojiru_water"><span class="e">💧</span><b>水・お湯</b><small>青汁そのもののK量</small></button><button class="chip" data-type="aojirumix" data-id="aojiru_milk"><span class="e">🥛</span><b>牛乳</b><small>200mLでK約300mgが上乗せ</small></button><button class="chip wide" data-type="aojirumix" data-id="aojiru_soymilk"><span class="e">🫘</span><b>豆乳</b><small>商品・量によりKが上乗せ</small></button></div><div class="foodcat">③ どれくらい続きましたか？</div><div class="chips"><button class="chip" data-type="aojirufreq" data-id="aojiru_daily"><span class="e">🔁</span><b>ほぼ毎日</b><small>健康習慣として続けている</small></button><button class="chip" data-type="aojirufreq" data-id="aojiru_twice"><span class="e">2️⃣</span><b>1日2回以上</b><small>朝夕など複数回</small></button><button class="chip wide" data-type="aojirufreq" data-id="aojiru_once"><span class="e">1️⃣</span><b>今回1回だけ</b><small>たまに飲んだ</small></button></div><div class="juiceAlert"><span class="bigline">⚠️ 青汁は「割り方」と「毎日」が盲点</span>粉末青汁を牛乳200mLで割ると、1杯で<b>約330〜450mg</b>になることがあります。液体タイプは製品によってさらに多い場合があります。</div><div class="juiceRule"><b>確認する3点：</b><br>① 粉末か、冷凍・ストレートか<br>② 水・牛乳・豆乳のどれで割ったか<br>③ 1日何杯、何日続けたか</div><div class="juiceSwap">✅ 商品の袋・箱を医療スタッフに見せ、栄養成分表示のカリウム量を確認しましょう。</div><button type="button" class="inlineDone" data-close-detail="aojiruInline">入力を完了して閉じる</button></div>`;
+   if(cat==='野菜・いも・豆類') extra=`<button class="chip detailTrigger" id="vegTrigger" data-type="detailtrigger" data-target="vegInline"><span class="e">🥬</span><b>野菜・いも・豆類</b><small>種類・1回量・調理法を確認</small><span class="hint">種類と量を選ぶ</span><span class="selectedMini">0個選択中</span></button><div class="inlineDetail vegInline" id="vegInline"><div class="inlineHead"><div><h3>🥬 どの野菜・いも・豆類ですか？</h3><p>複数選べます。選び終えたら閉じても、ほかの食品を続けて選べます。</p></div><button type="button" class="inlineClose" data-close-detail="vegInline">閉じる</button></div><p class="minilead"><b>表示順：</b>一般的な1回量でKが多くなりやすいものを上段に表示しています。数値は大きさ・品種・生／ゆで・製品によって変わる概算です。</p><div class="fruitgrid" id="vegdetailchips"></div><div class="vegGuide"><b>🥬 野菜は「何を食べたか」だけでなく、調理法も重要です。</b><br>生・焼く・蒸す・電子レンジだけではKが外へ逃げにくい食材があります。薄く切る → 水にさらす → たっぷりのお湯でゆでる → ゆで汁を捨てる、まで行うと減らしやすくなります。</div><button type="button" class="inlineDone" data-close-detail="vegInline">選択を完了して閉じる</button></div>`;
+   if(cat==='おやつ・間食') extra=`<button class="chip detailTrigger" id="nutsTrigger" data-type="detailtrigger" data-target="nutsInline"><span class="e">🥜</span><b>ナッツ・豆菓子</b><small>量・頻度を確認</small><span class="hint">どれくらいOKか見る</span><span class="selectedMini">未入力</span></button><div class="inlineDetail nutsInline" id="nutsInline"><div class="inlineHead"><div><h3>🥜 ナッツ、どれくらいならOK？</h3><p>量と頻度を選んでください。1回だけなら、気にしすぎなくてOKです。</p></div><button type="button" class="inlineClose" data-close-detail="nutsInline">閉じる</button></div><p class="minilead"><b>① どれくらい食べましたか？</b><br>アーモンドを目安に、実際に食べる量でKを確認します。</p><div class="fruitgrid"><button class="fruitchip" data-type="nutsamount" data-id="nuts_small"><span class="top"><span class="e">🥜</span>指でつまむ程度</span><small>5〜6粒：1回量なら大きな原因になりにくい量です。</small><span class="kmg">K 約45mg・少なめ</span></button><button class="fruitchip" data-type="nutsamount" data-id="nuts_handful"><span class="top"><span class="e">✋</span>片手ひとつかみ</span><small>15〜20粒：毎日続くとKとリンが積み上がります。</small><span class="kmg">K 約150mg・中</span></button><button class="fruitchip wide" data-type="nutsamount" data-id="nuts_lot"><span class="top"><span class="e">📦</span>両手・小袋1袋</span><small>約30〜50g：袋から直接食べると量が増えやすいです。</small><span class="kmg">K 約230〜380mg・高</span></button></div><p class="minilead" style="margin-top:12px"><b>② どれくらいの頻度？</b></p><div class="chips"><button class="chip" data-type="nutspattern" data-id="nuts_daily"><span class="e">🔁</span><b>ほぼ毎日</b><small>毎日つまむ習慣</small></button><button class="chip" data-type="nutspattern" data-id="nuts_sometimes"><span class="e">📅</span><b>時々</b><small>週1〜3回</small></button><button class="chip wide" data-type="nutspattern" data-id="nuts_once"><span class="e">1️⃣</span><b>1回だけ</b><small>たまに</small></button></div><div class="info" style="margin-top:14px"><b>OKライン：</b>指でつまむ5〜6粒くらいなら、気にしすぎなくて大丈夫。<br><b style="color:#992020">陽性（要注意）ライン：</b>片手ひとつかみ以上が<b>毎日</b>、または<b>次の透析まで長くあく日に小袋1袋</b>。</div><div class="deepbox"><h3>📏 ナッツの量とカリウム（勉強メモ）</h3><p class="minilead">アーモンド100gでK約760mg。「100gも食べない」ので、実際に食べる量で考えるのがコツ。</p><p>・5粒（約6g）… 約45mg<br>・10粒（約12g）… 約90mg<br>・片手ひとつかみ 15〜20粒（約20g）… 約150mg<br>・小袋1袋（約30g）… 約230mg<br>・50g … 約380mg</p><p><b>くらべると：</b>バナナ1本=約300〜400mg。だから<b>ひとつかみのナッツ＝バナナ半分弱</b>。1回だけなら、むしろ生の果物のほうがKは多いこともあります。</p><p><b>でも注意なのは：</b>ナッツは小さくて量を自覚しにくく、大袋から直食べ→毎日…で積み上がるタイプ。<b>リンも多め</b>なので、透析ではK＋Pの両面で確認します。</p><p><b>主役は果物・ジュース・芋・トマト。ナッツは“補助的な確認項目”です。</b></p><p style="color:var(--main2);font-weight:900">→ 食べるなら皿に5〜6粒だけ出して袋は戻す。毎日ひとつかみが続くなら隔日に。小袋は「1回で1袋」をやめて半分に。</p></div><button type="button" class="inlineDone" data-close-detail="nutsInline">入力を完了して閉じる</button></div><button class="chip detailTrigger" id="chocoTrigger" data-type="detailtrigger" data-target="chocoInline"><span class="e">🍫</span><b>チョコ・ココア</b><small>食べた量・作り方・頻度を確認</small><span class="hint">詳しく選ぶ</span><span class="selectedMini">未入力</span></button><div class="inlineDetail chocoInline" id="chocoInline"><div class="inlineHead"><div><h3>🍫 チョコ・ココア、どれくらい？</h3><p>食べたもの・飲んだものを、それぞれ選んでください。複数OKです。</p></div><button type="button" class="inlineClose" data-close-detail="chocoInline">閉じる</button></div><div class="foodcat">① 🍫 チョコレート</div><p class="minilead">どれくらい食べましたか？ 高カカオ製品は特に注意です。</p><div class="fruitgrid" id="chocoamtchips"></div><div class="chips" id="chocofreqchips" style="margin-top:9px"></div><div class="info" style="margin-top:12px"><b>チョコの注意点：</b><br>1〜2かけなら、大きな原因になりにくい量です。要注意なのは、<b>高カカオを何枚も食べる、板チョコを半分〜1枚、少量でも毎日続ける</b>場合です。袋や板のまま食べず、最初にお皿へ出しましょう。</div><div class="foodcat">② ☕ ココア</div><p class="minilead">牛乳で作るか、お湯で作るかでK量が大きく変わります。</p><div class="fruitgrid" id="cocoatypechips"></div><div class="chips" id="cocoafreqchips" style="margin-top:9px"></div><div class="cocoaClinical"><b>⚠️ 毎日飲む場合は要確認</b><br>銅補給などの目的で勧められていても、牛乳で作って1日2杯なら<b>K約660mg</b>になることがあります。「粉の種類」「牛乳かお湯か」「1日何杯か」を医療スタッフに伝えてください。</div><div class="deepbox"><h3>📏 目安</h3><p>・ミルクチョコ1〜2かけ：K約20〜45mg<br>・板チョコ半分：約100〜160mg<br>・板チョコ1枚：約200〜330mg<br>・ココア＋お湯：1杯 約140〜150mg<br>・ココア＋牛乳：1杯 約320〜330mg</p><p><small>※商品、粉の量、牛乳量によって異なります。ホワイトチョコはKが比較的少なめでも、脂質・糖質など別の点があるため「たくさん食べてよい」という意味ではありません。</small></p></div><button type="button" class="inlineDone" data-close-detail="chocoInline">選択を完了して閉じる</button></div>`;
+   if(cat==='調味料') extra=`<button class="chip detailTrigger" id="seasoningTrigger" data-type="detailtrigger" data-target="seasoningInline"><span class="e">🧂</span><b>調味料</b><small>減塩製品・たれ・ソース・ドレッシング</small><span class="hint">詳しく選ぶ</span><span class="selectedMini">0個選択中</span></button><div class="inlineDetail seasoningInline" id="seasoningInline"><div class="inlineHead"><div><h3>🧂 どの調味料が増えましたか？</h3><p>当てはまるものを選んでください。複数選べます。</p></div><button type="button" class="inlineClose" data-close-detail="seasoningInline">閉じる</button></div><div class="seasoningAlert"><b>⚠️ まず確認：減塩＝低カリウムとは限りません</b><br><b>減塩しお：</b>1gあたりK約190mg。製品例では、ひと振り0.1gならK約19mg、小さじ1杯約6gならK約1,140mgです。<br><b>減塩しょうゆ：</b>多くは大さじ1杯でK約25〜70mgですが、カリウム塩使用製品では800mg前後になることがあります。必ず栄養成分表示を確認してください。<br>「減塩」という名前だけでは判断せず、原材料表示の「塩化カリウム」「カリウム塩」と、栄養成分表示のK量を確認してください。</div><div class="drinkgrid" id="seasoningdetailchips"></div><div class="juiceRule"><b>調味料の見方は2つ：</b><br>① 塩化カリウムが入っていないか<br>② 濃縮された調味料を、どれくらい使ったか</div><div class="juiceSwap">✅ 作戦：ボトルから直接かけず、小皿に少量出して「つける」に変えましょう。</div><button type="button" class="inlineDone" data-close-detail="seasoningInline">選択を完了して閉じる</button></div>`;
+   const items=food.filter(f=>f[6]===cat && !['juice','choco','aojiru','salt','sauce'].includes(f[0])).map(f=>`<button class="chip" data-type="food" data-id="${f[0]}"><span class="e">${f[1]}</span><b>${f[2]}</b><small>${f[3]}</small></button>`).join('');
+   if(!extra&&!items)return'';
+   return `<div class="categoryBlock"><div class="foodcat">${catIcon[cat]} ${cat}</div><div class="chips">${extra}${items}</div></div>`;
+ }).join('') +'<div class="chips" style="margin-top:12px"><button class="chip wide" data-type="foodnone" data-id="none"><span class="e">✅</span><b>特に増えていない</b></button></div>';
+ const drinkRiskClass=id=>['gyokuroD','matchaD'].includes(id)?'high':id==='coffeeD'?'caution':id==='senchaD'?'moderate':'low';
+ $('#drinkdetailchips').innerHTML=drinkDetail.map(f=>`<button class="drinkchip ${drinkRiskClass(f[0])}" data-type="drinkdetail" data-id="${f[0]}"><span class="top"><span class="e">${f[1]}</span>${f[2]}</span><small>${f[5]}</small><span class="kmg">${f[3]}・${f[4]}</span></button>`).join('');
+ const juiceRiskClass=id=>['juice_veg','juice_smoothie'].includes(id)?'high':['juice_tomato','juice_100'].includes(id)?'caution':'moderate';
+ $('#juicedetailchips').innerHTML=juiceDetail.map(f=>`<button class="drinkchip ${juiceRiskClass(f[0])}" data-type="juicedetail" data-id="${f[0]}"><span class="top"><span class="e">${f[1]}</span>${f[2]}</span><small>${f[5]}</small><span class="kmg">${f[3]}</span></button>`).join('');
+ $('#chocoamtchips').innerHTML=chocoAmount.map((f,i)=>`<button class="fruitchip${i===2?' wide':''}" data-type="chocoamt" data-id="${f[0]}"><span class="top"><span class="e">${f[1]}</span>${f[2]}</span><small>${f[3]}</small><span class="kmg">${f[4]}</span></button>`).join('');
+ $('#chocofreqchips').innerHTML=chocoFrequency.map(f=>`<button class="chip wide" data-type="chocofreq" data-id="${f[0]}"><span class="e">${f[1]}</span><b>${f[2]}</b><small>${f[3]}</small></button>`).join('');
+ $('#cocoatypechips').innerHTML=cocoaType.map(f=>`<button class="fruitchip" data-type="cocoatype" data-id="${f[0]}"><span class="top"><span class="e">${f[1]}</span>${f[2]}</span><small>${f[3]}</small><span class="kmg">${f[4]}</span></button>`).join('');
+ $('#cocoafreqchips').innerHTML=cocoaFrequency.map(f=>`<button class="chip wide" data-type="cocoafreq" data-id="${f[0]}"><span class="e">${f[1]}</span><b>${f[2]}</b><small>${f[3]}</small></button>`).join('');
+ const seasoningRiskClass=id=>id==='season_saltk'?'high':['season_ketchup','season_sauce'].includes(id)?'caution':'moderate';
+ $('#seasoningdetailchips').innerHTML=seasoningDetail.map(f=>`<button class="drinkchip ${seasoningRiskClass(f[0])}" data-type="seasoningdetail" data-id="${f[0]}"><span class="top"><span class="e">${f[1]}</span>${f[2]}</span><small>${f[5]}</small><span class="kmg">${f[3]}</span></button>`).join('');
+ $('#vegdetailchips').innerHTML=vegDetail.map(f=>`<button class="fruitchip vegchip" data-type="food" data-id="${f[0]}"><span class="top"><span class="e">${f[1]}</span>${f[2]}</span><small>${f[3]}：${f[6]}</small><span class="kmg">K ${f[4]}・${f[5]}</span></button>`).join('');
+ $('#fruitdetailchips').innerHTML=fruitDetail.map(f=>`<button class="fruitchip" data-type="fruitdetail" data-id="${f[0]}"><span class="top"><span class="e">${f[1]}</span>${f[2]}</span><small>${f[3]}：${f[6]}</small><span class="kmg">K ${f[4]}・${f[5]}</span></button>`).join('');
+ $('#fruitgapchips').innerHTML=fruitGap.map(f=>`<button class="chip" data-type="fruitgap" data-id="${f[0]}"><span class="e">${f[1]}</span><b>${f[2]}</b><small>${f[3]}</small></button>`).join('');
+ updateSelectionSummary();
+}
+function renderItemFreqList(boxId, pickedIds, freqState, dataAttr, lookupFn, emptyMsg){
+ const box=document.getElementById(boxId); if(!box)return;
+ Object.keys(freqState).forEach(id=>{if(!pickedIds.includes(id))delete freqState[id];});
+ if(!pickedIds.length){box.innerHTML=`<p class="minilead" style="margin:6px 0 0">${emptyMsg}</p>`;return;}
+ box.innerHTML=pickedIds.map(id=>{
+  const it=lookupFn(id); if(!it)return'';
+  const cur=freqState[id];
+  return `<div class="itemFreqRow"><b>${it[1]} ${it[2]}</b><div class="chips">${freqOptions.map(o=>`<button class="chip small${cur===o[0]?' sel':''}" data-type="${dataAttr}" data-${dataAttr==='fruitfreq'?'fruit':dataAttr==='juicefreq'?'juice':'drink'}="${id}" data-id="${o[0]}"><span class="e">${o[1]}</span><b>${o[2]}</b></button>`).join('')}</div></div>`;
+ }).join('');
+}
+function renderFruitFreqList(){
+ renderItemFreqList('fruitFreqList', $$('[data-type="fruitdetail"].sel').map(x=>x.dataset.id), st.fruitfreq, 'fruitfreq', id=>fruitDetail.find(x=>x[0]===id), '先に上で果物を選ぶと、ここに1つずつ頻度の質問が出ます。');
+}
+function renderJuiceFreqList(){
+ renderItemFreqList('juiceFreqList', $$('[data-type="juicedetail"].sel').map(x=>x.dataset.id), st.juicefreq, 'juicefreq', id=>juiceDetail.find(x=>x[0]===id), '先に上で種類を選ぶと、ここに1つずつ頻度の質問が出ます。');
+}
+function renderDrinkFreqList(){
+ renderItemFreqList('drinkFreqList', $$('[data-type="drinkdetail"].sel').map(x=>x.dataset.id), st.drinkfreq, 'drinkfreq', id=>drinkDetail.find(x=>x[0]===id), '先に上でお茶・コーヒーを選ぶと、ここに1つずつ頻度の質問が出ます。');
+}
+buildFoodChips();
+renderFruitFreqList();
+renderJuiceFreqList();
+renderDrinkFreqList();
+
+/* ---------- 薬チップ（モードで組み立て） ---------- */
+function buildMedChips(){
+ let list=medCommon.slice();
+ $('#medchips').innerHTML=list.map(m=>{const w=m[4]?' wide':'';return `<button class="chip${w}" data-type="med" data-id="${m[0]}"><span class="e">${m[1]}</span><b>${m[2]}</b>${m[3]?`<small>${m[3]}</small>`:''}</button>`;}).join('');
+}
+buildMedChips();
+
+/* ---------- チップ選択 ---------- */
+function updateDetailTrigger(type){
+ if(type==='cook'){
+  const trigger=document.getElementById('cookLearnTrigger'); if(!trigger)return;
+  const selected=$$('[data-type="cook"].sel')[0];
+  const inside=selected&&['soak','boil','microwave'].includes(selected.dataset.id);
+  trigger.classList.toggle('active',!!inside);
+  const mini=trigger.querySelector('.selectedMini');
+  if(mini)mini.textContent=inside?selected.querySelector('b').textContent:'未確認';
+  return;
+ }
+ if(type==='veg'){
+  const trigger=document.getElementById('vegTrigger'); if(!trigger)return;
+  const ids=vegDetail.map(f=>f[0]);
+  const count=ids.filter(id=>document.querySelector(`[data-type="food"][data-id="${id}"].sel`)).length;
+  trigger.classList.toggle('active',count>0);
+  const mini=trigger.querySelector('.selectedMini');if(mini)mini.textContent=count+'個選択中';
+  return;
+ }
+ if(type==='juice'){
+  const trigger=document.getElementById('juiceTrigger'); if(!trigger)return;
+  const kinds=$$('[data-type="juicedetail"].sel').length;
+  const freq=$$('[data-type="juicefreq"].sel').length;
+  const on=(kinds+freq)>0;
+  trigger.classList.toggle('active',on);
+  const mini=trigger.querySelector('.selectedMini');
+  if(mini)mini.textContent=on?`${kinds}種類・${freq}項目`:'未入力';
+  return;
+ }
+ if(type==='aojiru'){
+  const trigger=document.getElementById('aojiruTrigger'); if(!trigger)return;
+  const picked=$$('[data-type="aojirukind"].sel,[data-type="aojirumix"].sel,[data-type="aojirufreq"].sel');
+  const on=picked.length>0;
+  trigger.classList.toggle('active',on);
+  const mini=trigger.querySelector('.selectedMini');
+  if(mini)mini.textContent=on?`${picked.length}項目選択中`:'未入力';
+  return;
+ }
+ if(type==='choco'){
+  const trigger=document.getElementById('chocoTrigger'); if(!trigger)return;
+  const picked=$$('[data-type="chocoamt"].sel,[data-type="chocofreq"].sel,[data-type="cocoatype"].sel,[data-type="cocoafreq"].sel');
+  const on=picked.length>0;
+  trigger.classList.toggle('active',on);
+  const mini=trigger.querySelector('.selectedMini');
+  if(mini)mini.textContent=on?`${picked.length}項目選択中`:'未入力';
+  return;
+ }
+ if(type==='seasoning'){
+  const trigger=document.getElementById('seasoningTrigger'); if(!trigger)return;
+  const count=$$('[data-type="seasoningdetail"].sel').length;
+  trigger.classList.toggle('active',count>0);
+  const mini=trigger.querySelector('.selectedMini');if(mini)mini.textContent=count+'個選択中';
+  return;
+ }
+ if(type==='nuts'){
+  const trigger=document.getElementById('nutsTrigger'); if(!trigger)return;
+  const amt=$$('[data-type="nutsamount"].sel')[0];
+  const freq=$$('[data-type="nutspattern"].sel')[0];
+  const on=!!(amt||freq);
+  trigger.classList.toggle('active',on);
+  const mini=trigger.querySelector('.selectedMini');
+  if(mini)mini.textContent= on ? ((amt?amt.querySelector('.top').textContent.trim():'')+(freq?'／'+freq.querySelector('b').textContent:'')) : '未入力';
+  return;
+ }
+ const isFruit=type==='fruit';
+ const count=$$(`[data-type="${isFruit?'fruitdetail':'drinkdetail'}"].sel`).length;
+ const trigger=document.getElementById(isFruit?'fruitTrigger':'drinkTrigger');
+ if(!trigger)return;
+ trigger.classList.toggle('active',count>0);
+ const mini=trigger.querySelector('.selectedMini');if(mini)mini.textContent=count+'個選択中';
+}
+function updateSelectionSummary(){
+ const labels=[...$$('[data-type="food"].sel b'),...$$('[data-type="fruitdetail"].sel .top'),...$$('[data-type="drinkdetail"].sel .top'),...$$('[data-type="juicedetail"].sel .top'),...$$('[data-type="juicefreq"].sel b'),...$$('[data-type="aojirukind"].sel b'),...$$('[data-type="aojirumix"].sel b'),...$$('[data-type="aojirufreq"].sel b'),...$$('[data-type="chocoamt"].sel b'),...$$('[data-type="chocofreq"].sel b'),...$$('[data-type="cocoatype"].sel b'),...$$('[data-type="cocoafreq"].sel b'),...$$('[data-type="seasoningdetail"].sel .top'),...$$('[data-type="nutsamount"].sel b')].map(x=>x.textContent.trim());
+ const box=$('#selectionSummary'); if(!box)return;
+ const text=box.querySelector('.selectionText');
+ if(!labels.length){box.classList.remove('show');if(text)text.innerHTML='<b>選択中：0件</b><span>タップした内容がここに表示されます</span>';}
+ else{box.classList.add('show');if(text)text.innerHTML=`<b>選択中：${labels.length}件</b><span>${labels.slice(0,6).join('・')}${labels.length>6?' ほか':''}</span>`;}
+ updateDetailTrigger('fruit');updateDetailTrigger('drink');updateDetailTrigger('juice');updateDetailTrigger('aojiru');updateDetailTrigger('veg');updateDetailTrigger('nuts');updateDetailTrigger('choco');updateDetailTrigger('seasoning');updateDetailTrigger('cook');
+ renderFruitFreqList();
+ renderJuiceFreqList();
+ renderDrinkFreqList();
+ syncDetailState();
+}
+function syncDetailState(){
+ const anyOpen=$$('.inlineDetail.open').length>0;
+ const box=$('#selectionSummary'); if(box)box.classList.toggle('detail-open',anyOpen);
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-cook-food]');
+ if(!b)return;
+ document.querySelectorAll('[data-cook-food]').forEach(x=>x.classList.toggle('sel',x===b));
+ const leaf=document.getElementById('cookLeafAdvice');
+ const dense=document.getElementById('cookDenseAdvice');
+ if(leaf)leaf.classList.toggle('show',b.dataset.cookFood==='leaf');
+ if(dense)dense.classList.toggle('show',b.dataset.cookFood==='dense');
+});
+function openDetail(target){
+ const panel=document.getElementById(target);if(!panel)return;
+ const willOpen=!panel.classList.contains('open');
+ $$('.inlineDetail.open').forEach(x=>{if(x!==panel)x.classList.remove('open')});
+ panel.classList.toggle('open',willOpen);
+ syncDetailState();
+}
+function closeDetail(target){
+ const panel=document.getElementById(target);
+ if(panel)panel.classList.remove('open');
+ syncDetailState();
+ // どの詳細画面も、閉じた後は開いた元のボタン位置へ戻す
+ const triggerId=target.replace(/Inline$/,'Trigger');
+ const trigger=document.getElementById(triggerId);
+ if(trigger)requestAnimationFrame(()=>trigger.scrollIntoView({behavior:'smooth',block:'center'}));
+}
+document.addEventListener('click',e=>{
+ const c=e.target.closest('[data-close-detail]');
+ if(c){closeDetail(c.dataset.closeDetail);return;}
+});
+document.addEventListener('click',e=>{const b=e.target.closest('.chip,.fruitchip,.drinkchip'); if(!b)return; const type=b.dataset.type,id=b.dataset.id;
+ if(type==='detailtrigger'){openDetail(b.dataset.target);return}
+ if(type==='food'){b.classList.toggle('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
+ else if(type==='fruitdetail'){b.classList.toggle('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
+ else if(type==='fruitfreq'){st.fruitfreq[b.dataset.fruit]=id;}
+ else if(type==='drinkdetail'){b.classList.toggle('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
+ else if(type==='juicedetail'){b.classList.toggle('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
+ else if(type==='aojirukind'){$$('[data-type="aojirukind"]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
+ else if(type==='aojirumix'){$$('[data-type="aojirumix"]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
+ else if(type==='aojirufreq'){$$('[data-type="aojirufreq"]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
+ else if(type==='chocoamt'){$$('[data-type="chocoamt"]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
+ else if(type==='chocofreq'){b.classList.toggle('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
+ else if(type==='cocoatype'){$$('[data-type="cocoatype"]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
+ else if(type==='cocoafreq'){b.classList.toggle('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
+ else if(type==='seasoningdetail'){b.classList.toggle('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
+ else if(type==='juicefreq'){st.juicefreq[b.dataset.juice]=id;}
+ else if(type==='drinkfreq'){st.drinkfreq[b.dataset.drink]=id;}
+ else if(type==='foodnone'){
+  const clearSel='#foodgroups .chip,[data-type="food"],[data-type="fruitdetail"],[data-type="drinkdetail"],[data-type="juicedetail"],[data-type="juicefreq"],[data-type="aojirukind"],[data-type="aojirumix"],[data-type="aojirufreq"],[data-type="chocoamt"],[data-type="chocofreq"],[data-type="cocoatype"],[data-type="cocoafreq"],[data-type="seasoningdetail"],[data-type="fruitgap"],[data-type="nutsamount"],[data-type="nutspattern"]';
+  // すでに選んだ項目がある状態で「特に増えていない」を押すと全部消えてしまうため、誤タップ防止の確認を入れる
+  const selCount=$$(clearSel).filter(x=>x.classList.contains('sel')).length;
+  if(selCount>0 && !confirm('これまでに選んだ'+selCount+'個の項目を、すべて消して「特に増えていない」にしますか？\n\n「次へ」に進みたいだけなら「キャンセル」を押してください。')){return;}
+  $$(clearSel).forEach(x=>x.classList.remove('sel'));
+  b.classList.add('sel');
+ }
+ else if(type==='fruitgap'){$$('[data-type="fruitgap"]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}
+ else if(type==='nutsamount'){$$('[data-type="nutsamount"]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
+ else if(type==='nutspattern'){$$('[data-type="nutspattern"]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');$$('[data-type="foodnone"]').forEach(x=>x.classList.remove('sel'))}
+ else if(type==='cook'){$$('[data-type="cook"]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}
+ else if(type==='med'){ if(id==='none'){$$('[data-type="med"]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}else{$$('[data-type="med"][data-id="none"]').forEach(x=>x.classList.remove('sel'));b.classList.toggle('sel')}}
+ updateSelectionSummary();
+});
+
+/* ---------- ステップ ---------- */
+function step(n){curStep=n;$$('.step').forEach(x=>x.style.display=(+x.dataset.step===n?'block':'none'));$$('.dot').forEach((d,i)=>d.classList.toggle('on',i===n));scrollTo(0,0)}
+function proceedFromFood(){st.food=$$('[data-type="food"].sel').map(x=>x.dataset.id);st.fruitdetail=$$('[data-type="fruitdetail"].sel').map(x=>x.dataset.id);st.drinkdetail=$$('[data-type="drinkdetail"].sel').map(x=>x.dataset.id);st.juicedetail=$$('[data-type="juicedetail"].sel').map(x=>x.dataset.id);const ak=$$('[data-type="aojirukind"].sel')[0];st.aojirukind=ak?ak.dataset.id:null;const am=$$('[data-type="aojirumix"].sel')[0];st.aojirumix=am?am.dataset.id:null;const af=$$('[data-type="aojirufreq"].sel')[0];st.aojirufreq=af?af.dataset.id:null;const ca=$$('[data-type="chocoamt"].sel')[0];st.chocoamt=ca?ca.dataset.id:null;const cf=$$('[data-type="chocofreq"].sel')[0];st.chocofreq=cf?cf.dataset.id:null;const ct=$$('[data-type="cocoatype"].sel')[0];st.cocoatype=ct?ct.dataset.id:null;const cff=$$('[data-type="cocoafreq"].sel')[0];st.cocoafreq=cff?cff.dataset.id:null;st.seasoningdetail=$$('[data-type="seasoningdetail"].sel').map(x=>x.dataset.id);const fg=$$('[data-type="fruitgap"].sel')[0];st.fruitgap=fg?fg.dataset.id:null;const na=$$('[data-type="nutsamount"].sel')[0];st.nutsamount=na?na.dataset.id:null;const np=$$('[data-type="nutspattern"].sel')[0];st.nutspattern=np?np.dataset.id:null;st.cook=null;step(1)}
+$('#next1').onclick=proceedFromFood;
+$('#redo').onclick=()=>{st.food=[];st.fruitdetail=[];st.drinkdetail=[];st.juicedetail=[];st.juicefreq={};st.drinkfreq={};st.aojirukind=null;st.aojirumix=null;st.aojirufreq=null;st.chocoamt=null;st.chocofreq=null;st.cocoatype=null;st.cocoafreq=null;st.seasoningdetail=[];st.fruitfreq={};st.fruitgap=null;st.nutsamount=null;st.nutspattern=null;st.cook=null;st.med=[];$$('.chip,.fruitchip,.drinkchip').forEach(x=>x.classList.remove('sel'));$$('.inlineDetail').forEach(x=>x.classList.remove('open'));syncDetailState();updateSelectionSummary();step(0)};
+$('#resultBtn').onclick=()=>{st.med=$$('[data-type="med"].sel').map(x=>x.dataset.id);calc();step(2)};
+
+/* ---------- 推理 ---------- */
+function add(arr,key,score,icon,title,sub,act){arr.push({key,score,icon,title,sub,act})}
+function calc(){let a=[];
+ if(st.med.includes('constip'))add(a,'constip',8,'🚽','便秘','カリウムの出口が狭くなっているかもしれません（便秘薬の飲み忘れ含む）','毎日お通じを出すことを相談する');
+ if(st.med.includes('kforget'))add(a,'kforget',6,'💊','カリウム薬の飲み忘れ','吸着薬の効果が出ず、Kが上がった可能性があります','食事の時に飲む習慣を作る');
+ if(st.med.includes('shortHD'))add(a,'shortHD',7,'🩸','透析不足','透析時間短縮・中止・休みでKが残った可能性があります','透析時間が短かったことをスタッフに伝える');
+ const map={
+  juice:['🧃','野菜・果物ジュース','小さな1本でもKが数百mg入る製品があり、短時間で飲み切りやすいです','1週間休み、麦茶・ほうじ茶へ替える'],
+  aojiru:['🌿','青汁・健康食品','健康食品が高Kの原因になることがあります','健康食品を主治医に見せる'],
+  greens:['🥬','ほうれん草・小松菜','生のままではKが残りやすく、量と調理法で影響が変わります','たっぷりのお湯でゆで、水にさらしてしぼる'],
+  salad:['🥗','生野菜サラダ','大皿や、トマト・コーンなど高Kの具材が重なるとKが増えます','小鉢量にし、高Kの具材を重ねない'],
+  tomato:['🍅','トマト','毎日・大玉・ジュースで増えやすいです','小ぶり1個まで。トマトジュースは控える'],
+  mushroom:['🍄','きのこ類','鍋や炒め物で一度に量が増えるとKが上乗せされます。乾燥品は特に濃縮されています','小鉢程度にし、汁は残す'],
+  seaweed:['🌿','海藻類','種類と加工法でK量が大きく異なり、乾燥品や毎日の小鉢は積み上がります','乾燥品は少量にし、毎日は避ける'],
+  corn:['🌽','とうもろこし・コーン','1本や缶詰を多く使うとKが増え、主食やサラダへの重なりも見落としやすいです','1/3〜1/2本程度にし、缶詰は汁を切る'],
+  potato:['🥔','じゃがいも','中1個でもKが多く、煮汁まで食べるとKが残ります','薄く切って水にさらし、たっぷりのお湯でゆでこぼす'],
+  sweetpotato:['🍠','焼きいも・さつまいも','焼くだけではKが逃げず、1回量も増えやすいです','半分にして毎日は避け、調理するなら薄く切ってゆでこぼす'],
+  pumpkin:['🎃','かぼちゃ','身が詰まっており、水さらしだけでは減りにくい食材です','下ゆでして汁は捨てる'],
+  edamame:['🫛','枝豆','小鉢でもKとリンが多く、つまみながら量が増えやすいです','小皿に出して量を決める'],
+  natto:['🫘','納豆','1パックでもKを含み、毎朝続くと積み上がります','毎日ではなく頻度を決める'],
+  tofu:['🥛','豆腐','種類と量でKが変わり、毎日の大豆習慣で積み上がります','1回量と頻度を決める'],
+  beans:['🫘','納豆・豆のおかず','豆類はKもリンも多く、毎日や小鉢以上で積み上がります','回数と小皿量を決める'],
+  soy:['🥛','豆腐・豆乳・きなこ','大豆製品は種類と量でKが増えます。豆乳・きなこを毎日続けた時は注意です','毎日続けず量を決める'],
+  choco:['🍫','チョコ・ココア','カカオ製品を毎日・多量にとったことが原因かもしれません','量と回数を減らす'],
+  imosnack:['🍠','いも系おやつ','いも由来のKに加え、袋で食べると量が増えます','小袋でも半分まで'],
+  anko:['🍡','あんこ・和菓子','小豆由来のKが毎日のお茶うけで積み上がります','1回量と回数を決める'],
+  salt:['🧂','減塩しお','塩化カリウム入り製品が原因のことがあります','減塩しおを使わない'],
+  sauce:['🧂','ケチャップ・ソース','トマト濃縮や量の増加が原因になります','かける量を半分にする'],
+  out:['🍽','外食','外食で量・塩分・Kが増えた可能性があります','外食前後で調整する'],
+  gift:['🎁','もらいもの','果物・いも菓子を連日食べた可能性があります','家族と分ける']
+ };
+ const highK=['potato','sweetpotato','pumpkin','corn','edamame','natto','beans','soy','choco','imosnack','anko','juice','aojiru','salt'];
+ const fruitHigh=['banana','melon','kiwi','avocadoF','persimmon','driedF'];
+ const fruitDailyRisk=['watermelon','mikan','biwa'];
+ const fruitPicked=st.fruitdetail||[];
+ const juicePicked=st.juicedetail||[];
+ const hasAojiru=!!(st.aojirukind||st.aojirumix||st.aojirufreq);
+ if(hasAojiru){
+  let score=2, parts=[];
+  if(st.aojirukind==='aojiru_powder'){score+=2;parts.push('粉末タイプ');}
+  if(st.aojirukind==='aojiru_liquid'){score+=6;parts.push('冷凍・ストレート液体');}
+  if(st.aojirumix==='aojiru_water')parts.push('水・お湯で作った');
+  if(st.aojirumix==='aojiru_milk'){score+=5;parts.push('牛乳で作った');}
+  if(st.aojirumix==='aojiru_soymilk'){score+=4;parts.push('豆乳で作った');}
+  if(st.aojirufreq==='aojiru_daily'){score+=3;parts.push('ほぼ毎日');}
+  if(st.aojirufreq==='aojiru_twice'){score+=5;parts.push('1日2回以上');}
+  if(st.aojirufreq==='aojiru_once')score=Math.max(2,score-2);
+  add(a,'aojirudetail',score,'🌿','青汁・健康食品',`${parts.join('／')}。種類・割り方・回数によって、1杯のK量が大きく変わります`,'商品の袋をスタッフに見せ、牛乳・豆乳で割らず、毎日の習慣をいったん見直す');
+ }
+ const hasChoco=!!(st.chocoamt||st.chocofreq);
+ const hasCocoa=!!(st.cocoatype||st.cocoafreq);
+ if(hasChoco||hasCocoa){
+  let score=0, parts=[], action=[];
+  if(st.chocoamt){const amt=chocoAmount.find(x=>x[0]===st.chocoamt);parts.push(`チョコ：${amt?amt[2]:''}`);score+=st.chocoamt==='choco_one'?6:st.chocoamt==='choco_half'?4:1;}
+  if(st.chocofreq==='choco_daily'){parts.push('ほぼ毎日');score+=3;action.push('チョコは1〜2かけを皿へ出し、毎日は避ける');}
+  if(st.cocoatype){const ct=cocoaType.find(x=>x[0]===st.cocoatype);parts.push(`ココア：${ct?ct[2]:''}`);score+=st.cocoatype==='cocoa_milk'?6:3;}
+  if(st.cocoafreq==='cocoa_daily'){parts.push('毎日・何杯も');score+=4;action.push('ココアの粉・牛乳・杯数をスタッフに伝える');}
+  add(a,'chocodetail',Math.max(score,2),'🍫','チョコ・ココア',`${parts.join('／')}。食べる量と、ココアの作り方・杯数によってKが上乗せされます`,action[0]||'チョコは量を決め、ココアは牛乳の有無と杯数を確認する');
+ }
+ const juiceHighRisk=juicePicked.some(id=>['juice_veg','juice_smoothie','juice_tomato','juice_100'].includes(id));
+ const freqLabel={daily:'毎日',sometimes:'週1〜3回',once:'今回だけ'};
+ // 果物1つ1つに、選んだ頻度をひもづけてスコア化する（複数の果物をまとめて「毎日」扱いにしない）
+ const fruitItemScore=f=>{
+  let sc=fruitHigh.includes(f[0])?6:fruitDailyRisk.includes(f[0])?2:1;
+  const freq=st.fruitfreq[f[0]];
+  if(freq==='daily')sc+=fruitHigh.includes(f[0])?2:5;
+  else if(freq==='sometimes')sc+=1;
+  else if(freq==='once')sc-=1;
+  return Math.max(1,sc);
+ };
+ const fruitHighCount=fruitPicked.filter(id=>fruitHigh.includes(id)).length;
+ const fruitDailyCount=fruitPicked.filter(id=>fruitDailyRisk.includes(id) && st.fruitfreq[id]==='daily').length;
+ const hk=st.food.filter(id=>highK.includes(id)).length + (fruitHighCount?1:0) + (fruitDailyCount?1:0) + (juiceHighRisk?1:0) + (hasAojiru?1:0);
+ if(fruitPicked.length){
+  const picked=fruitPicked.map(id=>fruitDetail.find(f=>f[0]===id)).filter(Boolean);
+  const ranked=picked.map(f=>({f,score:fruitItemScore(f)})).sort((x,y)=>y.score-x.score);
+  const topF=ranked[0].f, topFreq=st.fruitfreq[topF[0]];
+  // 選んだ果物「それぞれ」の名前と頻度を必ず残す（未選択の果物や「果物全般」に一般化しない）
+  const lines=picked.map(f=>`${f[2]}${st.fruitfreq[f[0]]?'（'+freqLabel[st.fruitfreq[f[0]]]+'）':'（頻度未選択）'}`);
+  const namesWithFreq=lines.join('・');
+  const title=(namesWithFreq.length>28)?(topF[2]+(topFreq?'（'+freqLabel[topFreq]+'）':'')):namesWithFreq;
+  let sub=namesWithFreq+' が今回のK上昇に関係した可能性があります。';
+  if(topFreq==='daily'){
+   sub+=fruitHigh.includes(topF[0])?`特に${topF[2]}は1回量あたりのKも多く、毎日だと上がりやすい果物です。`:`特に${topF[2]}は1個あたりが極端に高くなくても、毎日・複数個食べるとKが積み上がります。`;
+  }else if(fruitHigh.includes(topF[0])){
+   sub+=`${topF[2]}は1回量あたりのKが多い果物です。`;
+  }
+  add(a,'fruitdetail',ranked[0].score,topF[1],title,sub,'果物は1回量と回数を決め、毎日は避ける');
+ }
+ if(st.fruitgap==='gap_yes' && fruitPicked.length){
+  add(a,'fruitgap2',7,'📅','次の透析まで長くあく日に果物','長くあく日に果物が重なると、次の透析前までKがたまりやすくなります','果物は次の透析まで長くあかない日に少量にする');
+ }
+ if(st.nutsamount){
+  const amtScore={nuts_small:1,nuts_handful:5,nuts_lot:7}[st.nutsamount]||0;
+  const freqScore={nuts_daily:3,nuts_sometimes:1,nuts_once:0}[st.nutspattern]||0;
+  const nutsScore=amtScore+freqScore;
+  const amtLabel={nuts_small:'指でつまむ程度（5〜6粒・約45mg）',nuts_handful:'片手ひとつかみ（15〜20粒・約150mg）',nuts_lot:'両手ひとつかみ／小袋1袋（約230〜380mg）'}[st.nutsamount];
+  const freqLabel={nuts_daily:'ほぼ毎日',nuts_sometimes:'時々',nuts_once:'1回だけ'}[st.nutspattern]||'';
+  if(nutsScore>=4){
+   const title=(st.nutsamount==='nuts_lot')?'ナッツの食べすぎ':'ナッツの習慣';
+   add(a,'nuts',nutsScore,'🥜',title,amtLabel+(freqLabel?'／'+freqLabel:'')+'。1回より、毎日つまむ・大袋から直食べで積み上がります（リンも多め）',ifthen.nuts);
+  }
+ }
+ const juiceWeight={juice_veg:8,juice_smoothie:8,juice_tomato:6,juice_100:6,juice_mix:4};
+ const juiceItemScore=j=>{
+  let sc=juiceWeight[j[0]]||4;
+  const freq=st.juicefreq[j[0]];
+  if(freq==='daily')sc+=3;else if(freq==='sometimes')sc+=1;else if(freq==='once')sc=Math.max(2,sc-2);
+  return sc;
+ };
+ if(juicePicked.length){
+  const picked=juicePicked.map(id=>juiceDetail.find(j=>j[0]===id)).filter(Boolean);
+  const ranked=picked.map(j=>({j,score:juiceItemScore(j)})).sort((x,y)=>y.score-x.score);
+  const topJ=ranked[0].j, topFreq=st.juicefreq[topJ[0]];
+  const lines=picked.map(j=>`${j[2]}${st.juicefreq[j[0]]?'（'+freqLabel[st.juicefreq[j[0]]]+'）':'（頻度未選択）'}`);
+  const namesWithFreq=lines.join('・');
+  const title=(namesWithFreq.length>28)?(topJ[2]+(topFreq?'（'+freqLabel[topFreq]+'）':'')):namesWithFreq;
+  const sub=`${namesWithFreq}。小さく見えても1本に数百mg入る製品があり、短時間で飲み切りやすいため、今回のK上昇に関係した可能性があります`;
+  add(a,'juicedetail',ranked[0].score,topJ[1],title,sub,topJ[6]);
+ }
+ const seasoningPicked=st.seasoningdetail||[];
+ if(seasoningPicked.length){
+  const picked=seasoningPicked.map(id=>seasoningDetail.find(s=>s[0]===id)).filter(Boolean);
+  const weight={season_saltk:9,season_ketchup:4,season_sauce:5,season_sesame:4};
+  const topS=picked.slice().sort((a,b)=>(weight[b[0]]||0)-(weight[a[0]]||0))[0];
+  const names=picked.map(s=>s[2]).join('・');
+  let score=picked.reduce((sum,s)=>sum+(weight[s[0]]||3),0);
+  score=Math.min(10,Math.max(weight[topS[0]]||4,Math.round(score/picked.length)+(picked.length>1?2:0)));
+  const action=topS[0]==='season_saltk'?'塩化カリウム入り製品を中止し、商品をスタッフに見せる':'調味料はボトルからかけず、小皿に少量出してつける';
+  add(a,'seasoningdetail',score,topS[1],names,`${names}。塩化カリウム入り製品や、濃縮調味料をたっぷり使う習慣がK上昇に関係した可能性があります`,action);
+ }
+ const drinkPicked=st.drinkdetail||[];
+ const drinkHigh=['gyokuroD','matchaD'];
+ const drinkCaution=['coffeeD','senchaD'];
+ const drinkItemScore=d=>{
+  let sc=drinkHigh.includes(d[0])?6:drinkCaution.includes(d[0])?2:1;
+  const freq=st.drinkfreq[d[0]];
+  if(freq==='daily')sc+=drinkHigh.includes(d[0])?2:4;else if(freq==='sometimes')sc+=1;else if(freq==='once')sc-=1;
+  return Math.max(1,sc);
+ };
+ if(drinkPicked.length){
+  const picked=drinkPicked.map(id=>drinkDetail.find(d=>d[0]===id)).filter(Boolean);
+  const ranked=picked.map(d=>({d,score:drinkItemScore(d)})).sort((x,y)=>y.score-x.score);
+  const topD=ranked[0].d, topFreq=st.drinkfreq[topD[0]];
+  const lines=picked.map(d=>`${d[2]}${st.drinkfreq[d[0]]?'（'+freqLabel[st.drinkfreq[d[0]]]+'）':'（頻度未選択）'}`);
+  const namesWithFreq=lines.join('・');
+  const title=(namesWithFreq.length>28)?(topD[2]+(topFreq?'（'+freqLabel[topFreq]+'）':'')):namesWithFreq;
+  let sub=namesWithFreq+' を飲んでいます。';
+  if(drinkHigh.includes(topD[0]))sub+=`${topD[2]}は、浸出液でもKが多い、または茶葉ごと飲むため高Kの原因になりやすいお茶です。`;
+  else if(drinkCaution.includes(topD[0]))sub+=`${topD[2]}は1杯よりも、濃さと杯数・頻度が増えた時にKが積み上がります。`;
+  else sub+=`${topD[2]}は、比較的Kが少なめなお茶です。`;
+  if(ranked[0].score>=4)add(a,'drinkdetail',ranked[0].score,topD[1],title,sub,'お茶・コーヒーは種類と杯数・頻度を見直す');
+ }
+ st.food.forEach(id=>{let m=map[id]; if(!m)return; let w=highK.includes(id)?(hk>=2?4:6):4; add(a,id,w,m[0],m[1],m[2],m[3])});
+ if(hk>=2)add(a,'dietsum',Math.min(9,5+hk),'🍱','高カリウム食品が重なった',hk+'種類の高カリウム食品が増えています','果物・ジュース・いも類など、上乗せの食品をまず1つ減らす');
+ if(st.cook==='raw')add(a,'cook',5,'🥗','生のままが多い','ゆでこぼしでKを減らす余地があります','野菜はゆでて食べる');
+ if(st.cook==='sometimes')add(a,'cook2',3,'🍲','ゆでこぼしが時々','日によってKが上がりやすいです','高K食品の日だけでもゆでる');
+ if(st.cook==='soak')add(a,'cooksoak',5,'💧','水さらしだけ','水さらしだけではKの減り方が小さく、特にいも・かぼちゃを大きく切った場合は十分に抜けません','薄く切り、たっぷりのお湯でゆでて、ゆで汁を捨てる');
+ if(st.cook==='microwave')add(a,'cookmicrowave',6,'⚠️','レンジ・煮汁ごと','Kを含む水分を捨てる工程がないため、ゆでこぼしの代わりにはなりません','レンジだけで済ませず、ゆでて汁を捨てる。煮汁は残す');
+ if(a.length===0)add(a,'none',1,'🤔','はっきりした原因なし','隠れた間食・便秘・薬の影響をスタッフと確認しましょう','次回まで果物と便秘を意識する');
+ a.sort((x,y)=>y.score-x.score);st.causes=a.slice(0,3);renderResult();}
+
+function star(s){return '★★★★★'.slice(0,Math.max(1,Math.min(5,Math.round(s/2))))}
+function planFor(c){return ifthen[c.key]||c.act}
+function renderResult(){
+ const top=st.causes[0];
+ let html='<div class="card" style="text-align:center;border:3px solid var(--main);background:linear-gradient(135deg,#eefbf7,#fff);box-shadow:0 10px 24px rgba(9,135,118,.16);margin:0 0 16px">'
+  +'<div style="font-size:13px;font-weight:1000;color:var(--main2);letter-spacing:.06em">🕵️ 今回、いちばん考えられる原因</div>'
+  +'<div style="font-size:46px;line-height:1.2;margin:8px 0 2px">'+top.icon+'</div>'
+  +'<div style="font-size:25px;font-weight:1000;color:var(--ink);margin-bottom:8px">'+top.title+'</div>'
+  +'<p style="margin:0;color:var(--sub);font-size:15px">'+top.sub+'</p></div>';
+ if(st.causes.length>1){
+  html+='<h3>他に考えられる原因</h3>';
+  html+=st.causes.map((c,i)=>`<div class="rank"><div class="badge b${i+1}">${i+1}</div><div><b>${c.icon} ${c.title}</b><div class="stars">${star(c.score)}</div><small>${c.sub}</small></div></div>`).join('');
+ }
+ html+='<h3>💡 まず1つだけやるなら</h3><div class="action"><label style="font-weight:900;border-color:var(--main)">👉 '+planFor(top)+'</label>';
+ html+=st.causes.slice(1).map(c=>`<label>・${planFor(c)}</label>`).join('')+'</div>';
+ html+=`<div class="roundPanel"><h3>🩺 回診で確認する3つ</h3><div class="roundRow"><div class="num">1</div><div><b>原因</b><br>${top.icon} ${top.title}</div></div><div class="roundRow"><div class="num">2</div><div><b>次回までの作戦</b><br>${planFor(top)}</div></div><div class="roundRow"><div class="num">3</div><div><b>患者さんの言葉で確認</b><br>「次の採血まで、何をやってみますか？」</div></div></div>`;
+ if(st.food.length||st.fruitdetail.length||st.drinkdetail.length||st.juicedetail.length||st.juicefreq.length||st.aojirukind||st.aojirumix||st.aojirufreq||st.chocoamt||st.chocofreq||st.cocoatype||st.cocoafreq||st.seasoningdetail.length||st.nutsamount){
+  html+='<details class="morebox" style="margin-top:18px"><summary><b style="font-size:16px">📖 なぜ？を、もっとくわしく見る</b></summary><div class="morecontent">';
+  if(st.drinkdetail.length){const dFreqLabel={daily:'毎日',sometimes:'週1〜3回',once:'今回だけ'};html+='<div class="deepbox drinkbox"><h3>🍵 お茶・コーヒーの見方</h3><p><b>種類×濃さ×頻度</b>でKへの影響が変わります。玉露は高く、抹茶・粉茶は茶葉ごと飲むため注意。麦茶・ほうじ茶は比較的選びやすい飲み物です。</p>'+st.drinkdetail.map(id=>{const d=drinkDetail.find(x=>x[0]===id);if(!d)return'';const fr=st.drinkfreq[id];return `<p><b>${d[1]} ${d[2]}（${d[3]}）</b>${fr?'　頻度：<b style="color:#155f78">'+dFreqLabel[fr]+'</b>':'　頻度：未選択'}<br>${d[5]}<br><b style="color:#155f78">→ ${d[6]}</b></p>`}).join('')+'</div>';}
+  if(st.juicedetail.length){const jFreqLabel={daily:'毎日',sometimes:'週1〜3回',once:'今回だけ'};html+='<div class="deepbox" style="background:#fffafa;border-color:#efaaa7"><h3 style="color:#8f281f">🧃 野菜・果物ジュースの見方</h3><p><b>1本のK量×飲む量×頻度</b>で確認します。小さい紙パックでも、製品によってKが数百mg含まれます。短時間で飲み切りやすいため、量を自覚しにくい点にも注意します。</p>'+st.juicedetail.map(id=>{const j=juiceDetail.find(x=>x[0]===id);if(!j)return'';const fr=st.juicefreq[id];return `<p><b>${j[1]} ${j[2]}（${j[3]}）</b>${fr?'　頻度：<b style="color:#8f281f">'+jFreqLabel[fr]+'</b>':'　頻度：未選択'}<br>${j[5]}<br><b style="color:#8f281f">→ ${j[6]}</b></p>`}).join('')+'<div class="juiceSwap">まず1週間、ジュース類を麦茶・ほうじ茶・無糖炭酸水に置き換えてみましょう。</div></div>'; }
+  if(st.aojirukind||st.aojirumix||st.aojirufreq){
+   const kind={aojiru_powder:'粉末タイプ（1包を水で：約30〜150mg）',aojiru_liquid:'冷凍・ストレート液体（100g前後：約150〜400mg以上）'}[st.aojirukind]||'';
+   const mix={aojiru_water:'水・お湯',aojiru_milk:'牛乳（200mLでK約300mgが上乗せ）',aojiru_soymilk:'豆乳（商品・量によりKが上乗せ）'}[st.aojirumix]||'';
+   const freq={aojiru_daily:'ほぼ毎日',aojiru_twice:'1日2回以上',aojiru_once:'今回1回だけ'}[st.aojirufreq]||'';
+   html+='<div class="deepbox drinkbox"><h3>🌿 青汁・健康食品の見方</h3><p><b>種類×割り方×回数</b>で確認します。</p>'+(kind?'<p><b>種類：</b>'+kind+'</p>':'')+(mix?'<p><b>割り方：</b>'+mix+'</p>':'')+(freq?'<p><b>回数：</b>'+freq+'</p>':'')+'<p>粉末青汁を牛乳200mLで割ると、1杯で<b>約330〜450mg</b>になることがあります。液体タイプや1日2回の習慣は、さらに上乗せが大きくなります。</p><p><b style="color:#155f78">→ 商品の袋・箱を医療スタッフに見せ、カリウム表示と1日の杯数を確認しましょう。</b></p></div>';
+  }
+  if(st.chocoamt||st.chocofreq||st.cocoatype||st.cocoafreq){const ca=chocoAmount.find(f=>f[0]===st.chocoamt);const ct=cocoaType.find(f=>f[0]===st.cocoatype);html+='<div class="deepbox" style="background:#fffaf1;border-color:#c9a46a"><h3 style="color:#6f4300">🍫 チョコ・ココアの見方</h3>'+(ca?'<p><b>チョコ：</b>'+ca[2]+'（'+ca[3]+'）</p>':'')+(st.chocofreq?'<p><b>頻度：</b>ほぼ毎日</p>':'')+(ct?'<p><b>ココア：</b>'+ct[2]+'（'+ct[3]+'）</p>':'')+(st.cocoafreq?'<p><b>頻度：</b>毎日・1日何杯も</p>':'')+'<p><b style="color:#6f4300">→ チョコは最初に1〜2かけだけ皿へ。ココアは牛乳の有無と杯数を確認し、毎日ならスタッフへ伝えましょう。</b></p></div>'; }
+  if(st.seasoningdetail.length){html+='<div class="deepbox" style="background:#fffaf3;border-color:#e1b56f"><h3 style="color:#7a4d00">🧂 調味料の見方</h3><p><b>「塩化カリウム」と「使う量」</b>の2つを確認します。</p>'+st.seasoningdetail.map(id=>{const s=seasoningDetail.find(x=>x[0]===id);if(!s)return'';return `<p><b>${s[1]} ${s[2]}</b><br>${s[5]}<br><b style="color:#7a4d00">→ ${s[6]}</b></p>`}).join('')+'<div class="juiceSwap">ボトルから直接かけず、小皿に出して少量つけるだけでも使用量を減らせます。</div></div>'; }
+  if(st.fruitdetail.length){const fFreqLabel={daily:'毎日',sometimes:'週1〜3回',once:'今回だけ'};html+='<div class="deepbox fruitbox"><h3>🍎 果物の見方</h3><p>「果物」という大枠だけでなく、<b>種類×1回量×選んだ頻度</b>でKへの影響が変わります。同じ「毎日」でも、果物によって上がりやすさは違います。</p>'+st.fruitdetail.map(id=>{const f=fruitDetail.find(x=>x[0]===id);if(!f)return'';const fr=st.fruitfreq[id];return `<p><b>${f[1]} ${f[2]}（${f[3]}：K ${f[4]}）</b>${fr?'　頻度：<b style="color:#8a315b">'+fFreqLabel[fr]+'</b>':'　頻度：未選択'}<br>${f[6]}<br><b style="color:#8a315b">→ ${f[7]}</b></p>`}).join('')+'</div>';}
+  const selectedVeg=(st.food||[]).filter(id=>vegDetail.some(v=>v[0]===id));
+  if(selectedVeg.length){html+='<div class="deepbox" style="background:#f7fffb;border-color:#9fd8ca"><h3 style="color:#075f52">🥬 野菜・いも・豆類の見方</h3><p><b>種類×1回量×調理法</b>でKへの影響が変わります。数値は大きさ・品種・生／ゆで・製品によって変わる概算です。</p>'+selectedVeg.map(id=>{const f=vegDetail.find(x=>x[0]===id);if(!f)return'';return `<p><b>${f[1]} ${f[2]}（${f[3]}：K ${f[4]}）</b><br>${f[6]}<br><b style="color:#075f52">→ ${f[7]}</b></p>`}).join('')+'<div class="juiceSwap">野菜は、薄く切る → 水にさらす → たっぷりのお湯でゆでる → ゆで汁を捨てる、まで行うとKを減らしやすくなります。</div></div>';}
+  if(st.nutsamount){const al={nuts_small:'指でつまむ程度（5〜6粒・約45mg）',nuts_handful:'片手ひとつかみ（15〜20粒・約150mg＝バナナ半分弱）',nuts_lot:'両手ひとつかみ／小袋1袋（約230〜380mg）'}[st.nutsamount];const fl={nuts_daily:'ほぼ毎日',nuts_sometimes:'時々',nuts_once:'1回だけ'}[st.nutspattern]||'';html+='<div class="deepbox"><h3>🥜 ナッツの見方</h3><p><b>今回：</b>'+al+(fl?'／'+fl:'')+'</p><p>ナッツは「1回ドカ食い」より、毎日つまむ・大袋から直食べで積み上がるタイプ。片手ひとつかみ＝バナナ半分弱なので、1回だけなら気にしすぎなくてOK。<b>毎日ひとつかみ・小袋1袋が続くと要注意</b>です（リンも多め）。</p><p><b style="color:var(--main2)">→ 皿に5〜6粒だけ出して袋は戻す。毎日続くなら隔日に。</b></p></div>';}
+  html+=st.food.filter(id=>!vegDetail.some(v=>v[0]===id)).map(id=>{const f=food.find(x=>x[0]===id);if(!f)return'';return `<div class="info"><b>${f[1]} ${f[2]}</b><br>${f[4]}<br><b style="color:var(--main2)">→ ${f[5]}</b></div>`}).join('');
+  html+='</div></details>';
+ }
+ $('#result').innerHTML=html;
+ localStorage.setItem('kreportHtml',html);
+ localStorage.setItem('kdetect',JSON.stringify(st));
+}
+/* ---------- 記録（原因さがしの結果を保存） ---------- */
+
+/* ---------- レポート ---------- */
+function renderStaff(){
+ let saved=JSON.parse(localStorage.getItem('kdetect')||'{}');
+ let kv=(st.k||saved.k||5.4);
+ $('#sheetK').textContent=Number(kv).toFixed(1);
+ const currentResult=$('#result')?.innerHTML?.trim();
+ const savedReport=localStorage.getItem('kreportHtml')||'';
+ const detailHtml=currentResult||savedReport;
+ $('#sheetCause').innerHTML=detailHtml||'<div class="info">先に「原因さがし」を行うと、詳しい結果がここに表示されます。</div>';
+}
+
+const printReportBtn=document.getElementById('printReportBtn');
+if(printReportBtn){
+  printReportBtn.addEventListener('click',()=>{
+    // inline onclick が制限されるブラウザでも確実に動かす
+    window.focus();
+    setTimeout(()=>window.print(),50);
+  });
+}
+
+
+/* レポートをPNG画像として保存。スマートフォンでは共有画面を優先し、非対応時はダウンロードする。 */
+async function saveReportAsImage(){
+  const btn=document.getElementById('saveReportImageBtn');
+  const sheet=document.querySelector('#staff .sheet');
+  if(!sheet)return;
+  const original=btn?btn.innerHTML:'';
+  if(btn){btn.disabled=true;btn.textContent='画像を作成中…';}
+  try{
+    if(!window.html2canvas){
+      await new Promise((resolve,reject)=>{
+        const script=document.createElement('script');
+        script.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+        script.onload=resolve;
+        script.onerror=()=>reject(new Error('html2canvasの読み込みに失敗しました'));
+        document.head.appendChild(script);
+      });
+    }
+    const canvas=await window.html2canvas(sheet,{
+      backgroundColor:'#ffffff',
+      scale:2,
+      useCORS:true,
+      logging:false,
+      foreignObjectRendering:false,
+      scrollX:0,
+      scrollY:-window.scrollY
+    });
+    const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('画像化に失敗しました')),'image/png'));
+    const date=new Date().toLocaleDateString('ja-JP').replace(/\//g,'-');
+    const fileName=`カリウム原因レポート_${date}.png`;
+
+    // 共有APIをまず試すが、iPhoneのSafariは画像作成に時間がかかると共有が拒否されることがあるため、
+    // 失敗してもエラー扱いにせず、必ず「長押しで保存」の画面にフォールバックする
+    let shared=false;
+    if(navigator.share && navigator.canShare){
+      try{
+        const file=new File([blob],fileName,{type:'image/png'});
+        if(navigator.canShare({files:[file]})){
+          await navigator.share({files:[file],title:'カリウム原因レポート'});
+          shared=true;
+        }
+      }catch(shareErr){
+        console.error('share failed, falling back to image preview', shareErr);
+      }
+    }
+
+    if(!shared){
+      const url=URL.createObjectURL(blob);
+      const modal=document.getElementById('imgSaveModal');
+      const img=document.getElementById('imgSavePreview');
+      if(img&&modal){
+        img.src=url;
+        modal.classList.add('on');
+      }
+      // ダウンロードに対応する環境（Android・PCなど）向けに、あわせてファイル保存も試みる
+      const link=document.createElement('a');
+      link.href=url;
+      link.download=fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),60000);
+    }
+    if(btn){
+      btn.textContent=shared?'✓ 共有しました':'✓ 画像を表示しました';
+      setTimeout(()=>{btn.innerHTML=original;btn.disabled=false;},2400);
+    }
+  }catch(error){
+    console.error(error);
+    if(btn){
+      const detail=(error&&error.message)?error.message:'不明なエラー';
+      btn.textContent='作成できませんでした（'+detail+'）';
+      setTimeout(()=>{btn.innerHTML=original;btn.disabled=false;},4200);
+    }
+  }
+}
+const saveReportImageBtn=document.getElementById('saveReportImageBtn');
+if(saveReportImageBtn)saveReportImageBtn.addEventListener('click',saveReportAsImage);
+const imgSaveCloseBtn=document.getElementById('imgSaveCloseBtn');
+if(imgSaveCloseBtn)imgSaveCloseBtn.addEventListener('click',()=>{
+  const modal=document.getElementById('imgSaveModal');
+  if(modal)modal.classList.remove('on');
+});
+
+/* ---------- 果物タイミング模式図 ---------- */
+/* hd日は 前(控える)／後(食べてOK) に分割。週末前の透析日は「後」も控えめ(warnafter)。 */
+const timingData={
+  mwf:[
+    {d:'月',sub:'透析日',hd:1,before:'控える',after:'食べてOK'},
+    {d:'火',sub:'中1日',emoji:'🍎◎',badge:'食べてOK',cls:'good'},
+    {d:'水',sub:'透析日',hd:1,before:'控える',after:'食べてOK'},
+    {d:'木',sub:'中1日',emoji:'🍎◎',badge:'食べてOK',cls:'good'},
+    {d:'金',sub:'透析日',hd:1,before:'控える',after:'控えめ',warnafter:1,note:'後は2日空きへ'},
+    {d:'土',sub:'2日空き',emoji:'⚠️',badge:'連日は注意',cls:'danger'},
+    {d:'日',sub:'2日空き',emoji:'🚨',badge:'ここで多いと上がる',cls:'danger'}
+  ],
+  tts:[
+    {d:'火',sub:'透析日',hd:1,before:'控える',after:'食べてOK'},
+    {d:'水',sub:'中1日',emoji:'🍎◎',badge:'食べてOK',cls:'good'},
+    {d:'木',sub:'透析日',hd:1,before:'控える',after:'食べてOK'},
+    {d:'金',sub:'中1日',emoji:'🍎◎',badge:'食べてOK',cls:'good'},
+    {d:'土',sub:'透析日',hd:1,before:'控える',after:'控えめ',warnafter:1,note:'後は2日空きへ'},
+    {d:'日',sub:'2日空き',emoji:'⚠️',badge:'連日は注意',cls:'danger'},
+    {d:'月',sub:'2日空き',emoji:'🚨',badge:'ここで多いと上がる',cls:'danger'}
+  ]
+};
+function renderTiming(kind='mwf'){
+  const line=$('#weekline'); if(!line)return;
+  line.innerHTML=timingData[kind].map(d=>{
+    if(d.hd){
+      const afterCls='half after'+(d.warnafter?' warnafter':'');
+      const afterEmoji=d.warnafter?'△':'🍎◎';
+      return `<div class="daybox hd"><div class="d">${d.d}</div><div class="sub">${d.sub}</div><div class="daysplit"><div class="half before"><span class="ha">✋</span><b>透析前</b><small>${d.before}</small></div><div class="${afterCls}"><span class="ha">${afterEmoji}</span><b>透析後</b><small>${d.after}</small></div></div>${d.note?`<div class="sub" style="margin-top:3px;font-size:9px">${d.note}</div>`:''}</div>`;
+    }
+    return `<div class="daybox ${d.cls}"><div class="d">${d.d}</div><div class="sub">${d.sub}</div><div class="fruit">${d.emoji}</div><span class="badge2">${d.badge}</span></div>`;
+  }).join('');
+  $$('.scheduleSwitch button').forEach(b=>b.classList.toggle('sel',b.dataset.sch===kind));
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-sch]'); if(b)renderTiming(b.dataset.sch);});
+renderTiming('mwf');
+
+/* ---------- くらべるクイズ ---------- */
+const quizData=[
+ {a:{icon:'🥑',label:'アボカド 1/2個',mg:500,disp:'約500mg'},b:{icon:'🍌',label:'バナナ 1本',mg:320,disp:'約320mg'},note:'アボカドは1/2個でも果物の中でトップクラス。「そんなに食べていないのに」が起こりやすい果物です。'},
+ {a:{icon:'🧃',label:'濃い野菜ジュース 1本(200mL)',mg:575,disp:'約500〜650mg'},b:{icon:'🍌',label:'バナナ 1.5〜2本',mg:520,disp:'約480〜720mg相当'},note:'小さな紙パック1本でも、バナナ1.5〜2本分に相当することがあります。'},
+ {a:{icon:'⚠️',label:'減塩しょうゆ(カリウム塩) 大さじ1',mg:800,disp:'製品により約800mg前後'},b:{icon:'🟤',label:'ふつうのしょうゆ 大さじ1',mg:45,disp:'約25〜70mg'},note:'「カリウム塩」表示のある減塩調味料は、ふつうの調味料よりKがずっと多いことがあります。'},
+ {a:{icon:'🥜',label:'ナッツ ひとつかみ(15〜20粒)',mg:150,disp:'約150mg'},b:{icon:'🍌',label:'バナナ 1本',mg:320,disp:'約320mg'},note:'意外にも、バナナ1本の方がKは多めです。ナッツは「量を自覚しにくく、毎日続く」ことの方が心配です。'},
+ {a:{icon:'☕',label:'ココア(牛乳で作る) 1杯',mg:325,disp:'約320〜330mg'},b:{icon:'🍫',label:'ミルクチョコ 1〜2かけ',mg:33,disp:'約20〜45mg'},note:'チョコそのものは少量ならKは少なめですが、ココアを牛乳で毎日飲むとKが積み上がります。'},
+ {a:{icon:'🍠',label:'焼きいも 中1/2本',mg:475,disp:'約450〜500mg'},b:{icon:'🍚',label:'白ごはん 1膳',mg:45,disp:'約40〜50mg'},note:'白ごはんはKが少なめです。いも類はゆでこぼしをしないと、Kが多いまま残ります。'}
+];
+let quizIdx=0,quizScore=0,quizAnswered=false;
+function renderQuiz(){
+ const body=$('#quizBody'); if(!body)return;
+ if(quizIdx>=quizData.length){
+  body.innerHTML=`<div class="cookHero"><b>おつかれさまでした！</b><br>${quizScore} / ${quizData.length} 問正解でした。</div><p style="text-align:center;color:var(--sub);font-size:14px;margin:14px 0">「隠れカリウム」は、見た目や量の少なさだけでは判断できません。心配な食品は、量と頻度を意識するか、スタッフに確認してみましょう。</p><button class="btn" id="quizRestart">もう一度挑戦する</button><button class="btn soft" data-go="home">表紙にもどる</button>`;
+  $('#quizRestart').onclick=()=>{quizIdx=0;quizScore=0;renderQuiz();};
+  $$('#quizBody [data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+  return;
+ }
+ const q=quizData[quizIdx];
+ quizAnswered=false;
+ body.innerHTML=`<div class="quizProgress">問題 ${quizIdx+1} / ${quizData.length}　正解 ${quizScore}問</div>
+<div class="quizQ">カリウムが多いのはどっち？</div>
+<div class="quizPair">
+<button class="quizOpt" data-side="a"><span class="qe">${q.a.icon}</span><b>${q.a.label}</b></button>
+<div class="quizVs">VS</div>
+<button class="quizOpt" data-side="b"><span class="qe">${q.b.icon}</span><b>${q.b.label}</b></button>
+</div>
+<div class="quizResult" id="quizResult" style="display:none"></div>`;
+ $$('#quizBody .quizOpt').forEach(btn=>{
+  btn.onclick=()=>{
+   if(quizAnswered)return;
+   quizAnswered=true;
+   const side=btn.dataset.side;
+   const correctSide=q.a.mg>=q.b.mg?'a':'b';
+   const isCorrect=side===correctSide;
+   if(isCorrect)quizScore++;
+   $$('#quizBody .quizOpt').forEach(b2=>{b2.classList.add(b2.dataset.side===correctSide?'correct':'wrong');b2.disabled=true;});
+   const res=$('#quizResult');
+   res.style.display='block';
+   res.innerHTML=`<div class="quizJudge ${isCorrect?'ok':'ng'}">${isCorrect?'✅ 正解！':'❌ 不正解'}</div>
+<div class="quizNums"><span>${q.a.icon} ${q.a.label}：<b>${q.a.disp}</b></span><span>${q.b.icon} ${q.b.label}：<b>${q.b.disp}</b></span></div>
+<p class="quizNote">${q.note}</p>
+<button class="btn" id="quizNext">${quizIdx+1<quizData.length?'次の問題へ':'結果を見る'}</button>`;
+   $('#quizNext').onclick=()=>{quizIdx++;renderQuiz();};
+  };
+ });
+}
+const quizHomeBtn=document.querySelector('[data-go="quiz"]');
+if(quizHomeBtn){quizHomeBtn.onclick=()=>{quizIdx=0;quizScore=0;go('quiz');renderQuiz();};}
+renderQuiz();
+
+</script>
+</bo
